@@ -1,18 +1,143 @@
 ---
-title: "Quarto Website Template"
-bibliography: references.bib
-format:
-  html:
-    toc: true
-    toc-location: left
-    lightbox: true
+title: "SCENES Dataset"
+---
+
+
+![](assets/logo-scenes.png){height=150}
+
+The SCENES Dataset is an international collaborative effort to characterize and analyze naturalistic visual environments across different geographies. The project brings together partners from around the globe to build a rich repository of spectral and spatial data.
+
+## Measurement Locations
+
+```{r}
+#| label: scenes-map
+#| fig-align: center
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(ggplot2)
+library(ggrepel)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(patchwork)
+
+# Define cities
+cities <- data.frame(
+  city = c("Ottawa", "Rio de Janeiro", "Munich", "Tübingen", "Chexbres", "Lyon", "Ljubljana", "Prague"),
+  lat = c(45.4215, -22.9068, 48.1351, 48.5216, 46.4833, 45.75, 46.0569, 50.0755),
+  lon = c(-75.6972, -43.1729, 11.5820, 9.0522, 6.7833, 4.85, 14.5083, 14.4378)
+)
+
+cities_europe <- cities[3:8, ]
+
+# Load world map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Clean theme
+clean_theme <- theme_void() +
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+# Full map
+inset_xmin <- 0
+inset_xmax <- 20
+inset_ymin <- 42
+inset_ymax <- 55
+map_world <- ggplot(data = world) +
+  geom_sf(fill = "cornsilk", color = "gray") +
+  geom_point(data = cities, aes(x = lon, y = lat), color = "brown", size = 1) +
+  geom_text_repel(data = cities[1:2, ], aes(x = lon, y = lat, label = city), size = 3) +
+  coord_sf(c(-120, 40), ylim = c(-55, 70), expand = FALSE) +
+  # Add rectangle for Europe inset
+  annotate("rect",
+           xmin = inset_xmin, xmax = inset_xmax,
+           ymin = inset_ymin, ymax = inset_ymax,
+           color = "black", fill = NA, linewidth = 0.2) +
+  clean_theme
+
+# Europe map
+map_europe <- ggplot(data = world) +
+  geom_sf(fill = "cornsilk", color = "gray") +
+  geom_point(data = cities_europe, aes(x = lon, y = lat), color = "brown", size = 1) +
+  geom_text_repel(data = cities_europe, aes(x = lon, y = lat, label = city), size = 3) +
+  coord_sf(xlim = c(0, 20), ylim = c(42, 55), expand = FALSE) +
+    # Add rectangle for Europe inset
+  annotate("rect",
+           xmin = inset_xmin, xmax = inset_xmax,
+           ymin = inset_ymin, ymax = inset_ymax,
+           color = "black", fill = NA, linewidth = 0.2) +
+  clean_theme
+
+# Combine side-by-side
+map_world + map_europe + plot_layout(ncol = 2)
+
+```
+
 
 ---
 
-This is a Quarto website.
+# Resources
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Coming soon.
 
-```{r}
-1 + 1
-```
+---
+
+# Team
+
+## Partner Institutions & Team Members
+
+#### Technical University of Munich & Max Planck Institute for Biological Cybernetics
+
+![](assets/logo-tum.png){height=50}
+![](assets/logo-mpi.png){height=50}
+
+Niloufar Tabandeh
+
+Prof. Dr. Manuel Spitschan
+
+#### National Research Council Canada
+
+![](assets/logo-nrc.png){height=50}
+
+Dr. Jennifer Veitch
+
+#### Czech Technical University in Prague
+
+![](assets/logo-cvut.jpg){height=50}
+
+Dr. Lenka Maierova
+
+Martina Liberska
+
+#### École nationale des travaux publics de l'État (ENTPE)
+
+![](assets/logo-entpe.jpg){height=50}
+
+Dr. Sophie Jost
+
+Dr. Dominique Dumortier
+
+Aiman Reza
+
+#### Institut national de la santé et de la recherche médicale (INSERM)
+
+![](assets/logo-inserm.png){height=50}
+
+Dr. Claude Gronfier
+
+---
+
+# Funding
+
+This project is supported by the following organizations:
+
+[![Bavarian Research Alliance](assets/logo-bayfor.png){height=80}](https://www.bayfor.org/)
+[![Bavarian-Czech Academic Agency (Bayerisch-Tschechische Hochschulagentur, BTHA)](assets/logo-btha.png){height=80}](https://www.btha.cz/)
+[![Bayerisch-Französisches Hochschulzentrum / Centre de coopération universitaire franco-bavarois](assets/logo-bayfrance.png){height=80}](https://www.bayern-france.org/)
+[![Max Planck Society (Max-Planck-Gesellschaft)](assets/logo-mpg.png){height=80}](https://www.mpg.de/)
+
