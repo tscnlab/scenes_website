@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "imprint.html",
+    "href": "imprint.html",
+    "title": "Imprint",
+    "section": "",
+    "text": "Max Planck Research Group Translational Sensory and Circadian Neuroscience\nMax Planck Institute for Biological Cybernetics\nMax-Planck-Ring 8-14\nD-72076 Tübingen\nGermany\nEmail: manuel.spitschan@tuebingen.mpg.de\nTelephone: +49 (0)7071 601 1670"
+  },
+  {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "put the terms of the license here"
+  },
+  {
+    "objectID": "license.html#license-type",
+    "href": "license.html#license-type",
+    "title": "License",
+    "section": "",
+    "text": "put the terms of the license here"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "SCENES Dataset",
+    "section": "",
+    "text": "The SCENES Dataset is an international collaborative effort to characterize and analyze naturalistic visual environments across different geographies. The project brings together partners from around the globe to build a rich repository of spectral and spatial data."
+  },
+  {
+    "objectID": "index.html#measurement-locations",
+    "href": "index.html#measurement-locations",
+    "title": "SCENES Dataset",
+    "section": "Measurement Locations",
+    "text": "Measurement Locations"
+  },
+  {
+    "objectID": "index.html#partner-institutions-team-members",
+    "href": "index.html#partner-institutions-team-members",
+    "title": "SCENES Dataset",
+    "section": "Partner Institutions & Team Members",
+    "text": "Partner Institutions & Team Members\n\nTechnical University of Munich & Max Planck Institute for Biological Cybernetics\n \nNiloufar Tabandeh\nProf. Dr. Manuel Spitschan\n\n\nNational Research Council Canada\n\nDr. Jennifer Veitch\n\n\nCzech Technical University in Prague\n\nDr. Lenka Maierova\nMartina Liberska\n\n\nÉcole nationale des travaux publics de l’État (ENTPE)\n\nDr. Sophie Jost\nDr. Dominique Dumortier\nAiman Reza\n\n\nInstitut national de la santé et de la recherche médicale (INSERM)\n\nDr. Claude Gronfier"
+  }
+]
