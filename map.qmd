@@ -1,9 +1,0 @@
----
-title: "Acquisition Map"
----
-
-The interactive map shows where images were acquired.
-
-<iframe src="data/map.html" width="100%" height="720" style="border:0;"></iframe>
-
-*How to regenerate:* run `python scripts/build_map.py` to update `data/map.html`.
