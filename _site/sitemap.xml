@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://scenes-dataset.org/index.html</loc>
-    <lastmod>2025-08-17T17:17:56.593Z</lastmod>
+    <lastmod>2025-08-17T21:26:40.118Z</lastmod>
   </url>
   <url>
     <loc>https://scenes-dataset.org/license.html</loc>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://scenes-dataset.org/download.html</loc>
-    <lastmod>2025-08-17T16:46:07.437Z</lastmod>
+    <lastmod>2025-08-17T21:25:02.447Z</lastmod>
   </url>
   <url>
     <loc>https://scenes-dataset.org/data_dictionary.html</loc>
@@ -47,5 +47,17 @@
   <url>
     <loc>https://scenes-dataset.org/stats2.html</loc>
     <lastmod>2025-08-17T16:00:15.116Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/scripts/plots.html</loc>
+    <lastmod>2025-08-17T21:06:25.247Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/documentation.html</loc>
+    <lastmod>2025-08-17T20:41:21.506Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/gallery.html</loc>
+    <lastmod>2025-08-17T20:59:11.466Z</lastmod>
   </url>
 </urlset>

@@ -1,0 +1,12 @@
+---
+title: "Gallery"
+toc: false
+page-layout: article
+format:
+  html:
+    lightbox: true
+---
+ 
+This sheet shows all unique physical scenes in the SCENES dataset. Click the image to enlarge. 
+
+![](assets/unique_physical_scenes.png){width=100% lightbox="scenes" fig-alt="Overview of unique physical scenes"}

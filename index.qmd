@@ -3,7 +3,7 @@ title: "SCENES Dataset"
 ---
 
 
-![](assets/logo-scenes.png){height=150}
+![](assets/logos/logo-scenes.png){height=150}
 
 The SCENES Dataset is an international collaborative effort to characterize and analyze naturalistic visual environments across different geographies. The project brings together partners from around the globe to build a rich repository of spectral and spatial data.
 
@@ -15,69 +15,82 @@ The SCENES Dataset is an international collaborative effort to characterize and 
 
 Explore the interactive map to see all acquisition sites. Pan, zoom, and click markers for details about each scene.
 
+> The dataset and documentation are actively evolving. Check back for new releases.
 
 ---
 
 # Resources
-- **Statistics:** Explore dataset distributions  
-- **Download:** Data access (coming soon)  
-- **Documentation:** User guide (coming soon)  
 
+<div class="resources-grid">
 
+<div class="resource-card">
+**[SCENES overview](stats.qmd)**  
+Explore comprehensive dataset distributions and acquisition metrics  
+</div>
+
+<div class="resource-card">
+**[Download](download.qmd)**  
+Access spectral and spatial data  
+</div>
+
+<div class="resource-card">
+**[Gallery](gallery.qmd)**  
+View representative images from the dataset  
+</div>
+
+<div class="resource-card">
+**[Documentation](documentation.qmd)**  
+Complete user guide and methodology (coming soon)  
+</div>
 
 ---
 
 # Team
 
 ## Partner Institutions & Team Members
+<div class="logo-wall"> 
+<img src="assets/logos/logo-tum.png" alt="Technical University of Munich"> 
+<img src="assets/logos/logo-mpi.png" alt="Max Planck Institute for Biological Cybernetics"> 
+<img src="assets/logos/logo-nrc.png" alt="National Research Council Canada"> 
+<img src="assets/logos/logo-cvut.jpg" alt="Czech Technical University in Prague"> 
+<img src="assets/logos/logo-entpe.jpg" alt="ENTPE"> 
+<img src="assets/logos/logo-inserm.png" alt="INSERM"> 
+</div> 
 
-#### Technical University of Munich & Max Planck Institute for Biological Cybernetics
+<div class="team-list">
+<p class="institution">Technical University of Munich & Max Planck Institute for Biological Cybernetics</p>
+<p class="members">Niloufar Tabandeh &nbsp;|&nbsp; Prof. Dr. Manuel Spitschan</p>
 
-![](assets/logo-tum.png){height=50}
-![](assets/logo-mpi.png){height=50}
+<p class="institution">National Research Council Canada</p>
+<p class="members">Dr. Jennifer Veitch</p>
 
-Niloufar Tabandeh
+<p class="institution">Czech Technical University in Prague</p>
+<p class="members">Dr. Lenka Maierova &nbsp;|&nbsp; Martina Liberska</p>
 
-Prof. Dr. Manuel Spitschan
+<p class="institution">École nationale des travaux publics de l'État (ENTPE)</p>
+<p class="members">Dr. Sophie Jost &nbsp;|&nbsp; Dr. Dominique Dumortier &nbsp;|&nbsp; Aiman Reza</p>
 
-#### National Research Council Canada
-
-![](assets/logo-nrc.png){height=50}
-
-Dr. Jennifer Veitch
-
-#### Czech Technical University in Prague
-
-![](assets/logo-cvut.jpg){height=50}
-
-Dr. Lenka Maierova
-
-Martina Liberska
-
-#### École nationale des travaux publics de l'État (ENTPE)
-
-![](assets/logo-entpe.jpg){height=50}
-
-Dr. Sophie Jost
-
-Dr. Dominique Dumortier
-
-Aiman Reza
-
-#### Institut national de la santé et de la recherche médicale (INSERM)
-
-![](assets/logo-inserm.png){height=50}
-
-Dr. Claude Gronfier
+<p class="institution">Institut national de la santé et de la recherche médicale (INSERM)</p>
+<p class="members">Dr. Claude Gronfier</p>
+</div>
 
 ---
 
-# Funding
+## Funding
 
 This project is supported by the following organizations:
 
-[![Bavarian Research Alliance](assets/logo-bayfor.png){height=80}](https://www.bayfor.org/)
-[![Bavarian-Czech Academic Agency (Bayerisch-Tschechische Hochschulagentur, BTHA)](assets/logo-btha.png){height=80}](https://www.btha.cz/)
-[![Bayerisch-Französisches Hochschulzentrum / Centre de coopération universitaire franco-bavarois](assets/logo-bayfrance.png){height=80}](https://www.bayern-france.org/)
-[![Max Planck Society (Max-Planck-Gesellschaft)](assets/logo-mpg.png){height=80}](https://www.mpg.de/)
-
+<div class="funding-wall">
+  <a href="https://www.bayfor.org/" target="_blank" rel="noopener">
+    <img src="assets/logos/logo-bayfor.png" alt="Bavarian Research Alliance">
+  </a>
+  <a href="https://www.btha.cz/" target="_blank" rel="noopener">
+    <img src="assets/logos/logo-btha.png" alt="Bavarian-Czech Academic Agency (BTHA)">
+  </a>
+  <a href="https://www.bayern-france.org/" target="_blank" rel="noopener">
+    <img src="assets/logos/logo-bayfrance.png" alt="BayFrance">
+  </a>
+  <a href="https://www.mpg.de/" target="_blank" rel="noopener">
+    <img src="assets/logos/logo-mpg.png" alt="Max Planck Society (MPG)">
+  </a>
+</div>
