@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-08-16">
+<meta name="dcterms.date" content="2025-08-17">
 
-<title>Imprint – SCENES Dataset</title>
+<title>Data Dictionary – SCENES Dataset</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -73,10 +73,10 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -95,8 +95,12 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./map.html"> 
-<span class="menu-text">Map</span></a>
+    <a class="nav-link" href="./download.html"> 
+<span class="menu-text">Download</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./data_dictionary.html" aria-current="page"> 
+<span class="menu-text">Data Dictionary</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -106,51 +110,143 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Imprint</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-      <div>
-      <div class="quarto-title-meta-heading">Last modified:</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">August 16, 2025</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Dictionary</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Last modified:</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 17, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
-<p><a href="https://www.kyb.tuebingen.mpg.de/614159/translational-sensory-and-circadian-neuroscience">Max Planck Research Group Translational Sensory and Circadian Neuroscience</a></p>
-<p><a href="https://www.kyb.tuebingen.mpg.de/en">Max Planck Institute for Biological Cybernetics</a></p>
-<p>Max-Planck-Ring 8-14</p>
-<p>D-72076 Tübingen</p>
-<p>Germany</p>
-<p>Email: <a href="mailto:manuel.spitschan@tuebingen.mpg.de">manuel.spitschan@tuebingen.mpg.de</a></p>
-<p>Telephone: +49 (0)7071 601 1670</p>
+</header>
+
+
+<p>This page documents the columns in <code>data/metadata.csv</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 57%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>filename</td>
+<td>string</td>
+<td>File identifier for the acquisition</td>
+<td><code>20230621T0830</code></td>
+</tr>
+<tr class="even">
+<td>date</td>
+<td>date</td>
+<td>Acquisition date (local)</td>
+<td><code>2023-06-21</code></td>
+</tr>
+<tr class="odd">
+<td>time</td>
+<td>time</td>
+<td>Acquisition time (local)</td>
+<td><code>08:30:00</code></td>
+</tr>
+<tr class="even">
+<td>location</td>
+<td>string</td>
+<td>Human-readable location/label</td>
+<td><code>Tübingen</code></td>
+</tr>
+<tr class="odd">
+<td>latitude</td>
+<td>float</td>
+<td>Latitude in decimal degrees</td>
+<td><code>48.5216</code></td>
+</tr>
+<tr class="even">
+<td>longitude</td>
+<td>float</td>
+<td>Longitude in decimal degrees</td>
+<td><code>9.0522</code></td>
+</tr>
+<tr class="odd">
+<td>view</td>
+<td>category</td>
+<td>View class</td>
+<td><code>Outdoor</code> / <code>Indoor w/ window</code> / <code>Indoor w/o window</code></td>
+</tr>
+<tr class="even">
+<td>scene</td>
+<td>category</td>
+<td>Scene descriptor (cleaned from parentheses)</td>
+<td><code>park</code>, <code>office</code>, <code>street</code></td>
+</tr>
+<tr class="odd">
+<td>lighting</td>
+<td>category</td>
+<td>Lighting descriptor (cleaned from parentheses)</td>
+<td><code>daylight</code>, <code>tungsten</code></td>
+</tr>
+<tr class="even">
+<td>iso</td>
+<td>int</td>
+<td>Camera ISO</td>
+<td><code>400</code></td>
+</tr>
+<tr class="odd">
+<td>ev</td>
+<td>float</td>
+<td>Exposure value or exposure compensation</td>
+<td><code>0.3</code></td>
+</tr>
+<tr class="even">
+<td>exposure_time</td>
+<td>float</td>
+<td>Exposure time (seconds)</td>
+<td><code>0.005</code></td>
+</tr>
+<tr class="odd">
+<td>aperture</td>
+<td>float</td>
+<td>F-number</td>
+<td><code>2.8</code></td>
+</tr>
+<tr class="even">
+<td>notes</td>
+<td>string</td>
+<td>Free-form notes (optional)</td>
+<td><code>cloudy</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

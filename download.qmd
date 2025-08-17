@@ -1,0 +1,45 @@
+---
+title: "Download the SCENES Data"
+---
+
+## Example Images 
+Here are a few representative images from the dataset.
+
+<div style="display:flex; gap:20px; text-align:center;">
+
+<div>
+  ![](assets/samples/outdoor.jpg){width=180}
+  <div style="font-size:12px;">Outdoor</div>
+</div>
+
+<div>
+  ![](assets/samples/indoor_window.jpg){width=180}
+  <div style="font-size:12px;">Indoor w/ window</div>
+</div>
+
+<div>
+  ![](assets/samples/outdoor2.jpg){width=180}
+  <div style="font-size:12px;">Outdoor</div>
+</div>
+
+<div>
+  ![](assets/samples/indoor_nowindow.jpg){width=180}
+  <div style="font-size:12px;">Indoor no window</div>
+</div>
+
+</div>
+
+## Dataset Access
+You can access the available dataset files here:
+
+- [Download Metadata (CSV)](data/20250630_SCENES_metadata_integrated_modified.csv)
+- [Download GoPro RAW (GPR)](link)
+- [Download WP690 RAW](link)
+- [Download registered Pairs (PKL)](link)
+
+> Large assets (RAW images, registered pairs) will be hosted externally to keep this site lightweight and fast.  
+
+### Recommended citation
+These files are provided for research and educational purposes. Please cite the SCENES project when using this dataset:
+
+> SCENES Consortium (2025). SCENES: An International Dataset of Naturalistic Visual Environments. [DOI link coming soon (sample only)](link)

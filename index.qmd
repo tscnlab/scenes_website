@@ -7,83 +7,23 @@ title: "SCENES Dataset"
 
 The SCENES Dataset is an international collaborative effort to characterize and analyze naturalistic visual environments across different geographies. The project brings together partners from around the globe to build a rich repository of spectral and spatial data.
 
-## Measurement Locations
+## Where the Data Was Collected
 
-```{r}
-#| label: scenes-map
-#| fig-align: center
-#| out-width: 100%
-#| echo: false
-#| warning: false
-#| message: false
+<div class="map-embed">
+  <iframe src="data/map.html" title="SCENES acquisition map"></iframe>
+</div>
 
-library(ggplot2)
-library(ggrepel)
-library(rnaturalearth)
-library(rnaturalearthdata)
-library(sf)
-library(patchwork)
-
-# Define cities
-cities <- data.frame(
-  city = c("Ottawa", "Rio de Janeiro", "Munich", "Tübingen", "Chexbres", "Lyon", "Ljubljana", "Prague"),
-  lat = c(45.4215, -22.9068, 48.1351, 48.5216, 46.4833, 45.75, 46.0569, 50.0755),
-  lon = c(-75.6972, -43.1729, 11.5820, 9.0522, 6.7833, 4.85, 14.5083, 14.4378)
-)
-
-cities_europe <- cities[3:8, ]
-
-# Load world map
-world <- ne_countries(scale = "medium", returnclass = "sf")
-
-# Clean theme
-clean_theme <- theme_void() +
-  theme(
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.background = element_rect(fill = "white", color = NA)
-  )
-
-# Full map
-inset_xmin <- 0
-inset_xmax <- 20
-inset_ymin <- 42
-inset_ymax <- 55
-map_world <- ggplot(data = world) +
-  geom_sf(fill = "cornsilk", color = "gray") +
-  geom_point(data = cities, aes(x = lon, y = lat), color = "brown", size = 1) +
-  geom_text_repel(data = cities[1:2, ], aes(x = lon, y = lat, label = city), size = 3) +
-  coord_sf(c(-120, 40), ylim = c(-55, 70), expand = FALSE) +
-  # Add rectangle for Europe inset
-  annotate("rect",
-           xmin = inset_xmin, xmax = inset_xmax,
-           ymin = inset_ymin, ymax = inset_ymax,
-           color = "black", fill = NA, linewidth = 0.2) +
-  clean_theme
-
-# Europe map
-map_europe <- ggplot(data = world) +
-  geom_sf(fill = "cornsilk", color = "gray") +
-  geom_point(data = cities_europe, aes(x = lon, y = lat), color = "brown", size = 1) +
-  geom_text_repel(data = cities_europe, aes(x = lon, y = lat, label = city), size = 3) +
-  coord_sf(xlim = c(0, 20), ylim = c(42, 55), expand = FALSE) +
-    # Add rectangle for Europe inset
-  annotate("rect",
-           xmin = inset_xmin, xmax = inset_xmax,
-           ymin = inset_ymin, ymax = inset_ymax,
-           color = "black", fill = NA, linewidth = 0.2) +
-  clean_theme
-
-# Combine side-by-side
-map_world + map_europe + plot_layout(ncol = 2)
-
-```
+Explore the interactive map to see all acquisition sites. Pan, zoom, and click markers for details about each scene.
 
 
 ---
 
 # Resources
+- **Statistics:** Explore dataset distributions  
+- **Download:** Data access (coming soon)  
+- **Documentation:** User guide (coming soon)  
 
-Coming soon.
+
 
 ---
 

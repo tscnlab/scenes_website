@@ -10,6 +10,10 @@ website:
     left:
       - text: Home
         href: index.qmd
+      - text: "Data at a Glance"
+        href: stats.qmd
+      - text: "Download"
+        href: download.qmd
   page-footer:
     center: |
       [![](assets/logo-mpi.png){width=180pt}](https://www.kyb.tuebingen.mpg.de/en)
@@ -17,6 +21,7 @@ website:
 
 format:
   html:
+    include-in-header: assets/plotly-loader.html
     theme:
       - cosmo
       - brand

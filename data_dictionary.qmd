@@ -1,0 +1,22 @@
+---
+title: "Data Dictionary"
+---
+
+This page documents the columns in `data/metadata.csv`.
+
+| Column        | Type     | Description                                                           | Example                    |
+|---------------|----------|-----------------------------------------------------------------------|----------------------------|
+| filename      | string   | File identifier for the acquisition                                   | `20230621T0830`            |
+| date          | date     | Acquisition date (local)                                              | `2023-06-21`               |
+| time          | time     | Acquisition time (local)                                              | `08:30:00`                 |
+| location      | string   | Human-readable location/label                                         | `Tübingen`                 |
+| latitude      | float    | Latitude in decimal degrees                                           | `48.5216`                  |
+| longitude     | float    | Longitude in decimal degrees                                          | `9.0522`                   |
+| view          | category | View class                                                            | `Outdoor` / `Indoor w/ window` / `Indoor w/o window` |
+| scene         | category | Scene descriptor (cleaned from parentheses)                           | `park`, `office`, `street` |
+| lighting      | category | Lighting descriptor (cleaned from parentheses)                        | `daylight`, `tungsten`     |
+| iso           | int      | Camera ISO                                                            | `400`                      |
+| ev            | float    | Exposure value or exposure compensation                               | `0.3`                      |
+| exposure_time | float    | Exposure time (seconds)                                               | `0.005`                    |
+| aperture      | float    | F-number                                                              | `2.8`                      |
+| notes         | string   | Free-form notes (optional)                                            | `cloudy`                   |
