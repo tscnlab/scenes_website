@@ -23,22 +23,22 @@ Explore the interactive map to see all acquisition sites. Pan, zoom, and click m
 
   <div class="resource-card">
   **[SCENES overview](stats.qmd)**  
-  Explore comprehensive dataset distributions and acquisition metrics  
+  Get to know the dataset with summaries and key metrics
   </div>
 
   <div class="resource-card">
   **[Download](download.qmd)**  
-  Access spectral and spatial data  
+  Access and explore the dataset
   </div>
 
   <div class="resource-card">
   **[Gallery](link)**  
-  View representative images from the dataset (coming soon) 
+  Browse representative images (coming soon)  
   </div>
 
   <div class="resource-card">
   **[Documentation](link)**  
-  Complete user guide and methodology (coming soon)  
+  Learn methods and usage guidelines (coming soon)
   </div>
 </div>
 
