@@ -346,93 +346,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="cell-11" class="cell" data-execution_count="118">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># --- inputs / orders ---</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>custom_scene_order <span class="op">=</span> [</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'countryside'</span>, <span class="st">'forest'</span>, <span class="st">'water'</span>, <span class="st">'skyscraper'</span>, <span class="st">'mountain'</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'park'</span>, <span class="st">'city'</span>, <span class="st">'open field'</span>, <span class="st">'industry'</span>, <span class="st">'road'</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'office'</span>, <span class="st">'conference room'</span>, <span class="st">'corridor'</span>, <span class="st">'bedroom'</span>, <span class="st">'kitchen'</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>view_order <span class="op">=</span> [<span class="st">"Outdoor"</span>, <span class="st">"Indoor w/ window"</span>, <span class="st">"Indoor w/o window"</span>]</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># --- aggregate counts like your matplotlib code ---</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>combo_counts <span class="op">=</span> (</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    meta_df.groupby([<span class="st">'scene'</span>, <span class="st">'view'</span>, <span class="st">'lighting'</span>])</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>           .size().reset_index(name<span class="op">=</span><span class="st">'count'</span>)</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>           .sort_values(<span class="st">'count'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>agg_counts <span class="op">=</span> combo_counts.groupby([<span class="st">'scene'</span>, <span class="st">'view'</span>], as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only scenes present in data but respect your custom order</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>scenes_in_data <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> custom_scene_order <span class="cf">if</span> s <span class="kw">in</span> agg_counts[<span class="st">'scene'</span>].unique()]</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co"># build full grid scene×view so missing combos show as 0 (keeps stacking consistent)</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>full <span class="op">=</span> pd.DataFrame(<span class="bu">list</span>(product(scenes_in_data, view_order)), columns<span class="op">=</span>[<span class="st">'scene'</span>,<span class="st">'view'</span>])</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> (full.merge(agg_counts, on<span class="op">=</span>[<span class="st">'scene'</span>,<span class="st">'view'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>                .fillna({<span class="st">'count'</span>: <span class="dv">0</span>}))</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>plot_df[<span class="st">'count'</span>] <span class="op">=</span> plot_df[<span class="st">'count'</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># --- plotly stacked bar with inside labels ---</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.bar(</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    plot_df,</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'scene'</span>, y<span class="op">=</span><span class="st">'count'</span>, color<span class="op">=</span><span class="st">'view'</span>,</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">'scene'</span>: scenes_in_data, <span class="st">'view'</span>: view_order},</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>VIEW_COLORS,</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Scene distribution by view"</span>,</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># text_auto=True,</span></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    barmode<span class="op">=</span><span class="st">'stack'</span>,</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">'Count'</span>,</span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span><span class="st">''</span>,</span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(orientation<span class="op">=</span><span class="st">'h'</span>, yanchor<span class="op">=</span><span class="st">'bottom'</span>, y<span class="op">=</span><span class="fl">1.02</span>, xanchor<span class="op">=</span><span class="st">'center'</span>, x<span class="op">=</span><span class="fl">0.5</span>),</span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>    bargap<span class="op">=</span><span class="fl">0.15</span></span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">270</span>)</span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/scene_distribution_by_view.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>custom_scene_order <span class="op">=</span> [</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'countryside'</span>, <span class="st">'forest'</span>, <span class="st">'water'</span>, <span class="st">'skyscraper'</span>, <span class="st">'mountain'</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'park'</span>, <span class="st">'city'</span>, <span class="st">'open field'</span>, <span class="st">'industry'</span>, <span class="st">'road'</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'office'</span>, <span class="st">'conference room'</span>, <span class="st">'corridor'</span>, <span class="st">'bedroom'</span>, <span class="st">'kitchen'</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>view_order <span class="op">=</span> [<span class="st">"Outdoor"</span>, <span class="st">"Indoor w/ window"</span>, <span class="st">"Indoor w/o window"</span>]</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>combo_counts <span class="op">=</span> (</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    meta_df.groupby([<span class="st">'scene'</span>, <span class="st">'view'</span>, <span class="st">'lighting'</span>])</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>           .size().reset_index(name<span class="op">=</span><span class="st">'count'</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>           .sort_values(<span class="st">'count'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>agg_counts <span class="op">=</span> combo_counts.groupby([<span class="st">'scene'</span>, <span class="st">'view'</span>], as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>scenes_in_data <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> custom_scene_order <span class="cf">if</span> s <span class="kw">in</span> agg_counts[<span class="st">'scene'</span>].unique()]</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>full <span class="op">=</span> pd.DataFrame(<span class="bu">list</span>(product(scenes_in_data, view_order)), columns<span class="op">=</span>[<span class="st">'scene'</span>,<span class="st">'view'</span>])</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> (full.merge(agg_counts, on<span class="op">=</span>[<span class="st">'scene'</span>,<span class="st">'view'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                .fillna({<span class="st">'count'</span>: <span class="dv">0</span>}))</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>plot_df[<span class="st">'count'</span>] <span class="op">=</span> plot_df[<span class="st">'count'</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.bar(</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    plot_df,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'scene'</span>, y<span class="op">=</span><span class="st">'count'</span>, color<span class="op">=</span><span class="st">'view'</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">'scene'</span>: scenes_in_data, <span class="st">'view'</span>: view_order},</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>VIEW_COLORS,</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Scene distribution by view"</span>,</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># text_auto=True,</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    barmode<span class="op">=</span><span class="st">'stack'</span>,</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">'Count'</span>,</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span><span class="st">''</span>,</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(orientation<span class="op">=</span><span class="st">'h'</span>, yanchor<span class="op">=</span><span class="st">'bottom'</span>, y<span class="op">=</span><span class="fl">1.02</span>, xanchor<span class="op">=</span><span class="st">'center'</span>, x<span class="op">=</span><span class="fl">0.5</span>),</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    bargap<span class="op">=</span><span class="fl">0.15</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">270</span>)</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/scene_distribution_by_view.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Unable to display output for mime type(s): application/vnd.plotly.v1+json</code></pre>
 </div>
 </div>
 <div id="cell-12" class="cell" data-execution_count="129">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>scene_order <span class="op">=</span> <span class="bu">sorted</span>(meta_df[<span class="st">"scene"</span>].dropna().unique())</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>view_order <span class="op">=</span> [<span class="st">"Outdoor"</span>, <span class="st">"Indoor w/ window"</span>, <span class="st">"Indoor w/o window"</span>]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    meta_df.dropna(subset<span class="op">=</span>[<span class="st">"scene"</span>, <span class="st">"hour"</span>, <span class="st">"view"</span>]),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"scene"</span>,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"hour"</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"view"</span>,</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">"scene"</span>: custom_scene_order, <span class="st">"view"</span>: view_order},</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>VIEW_COLORS,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Acquisition times by scene category"</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">"Hour of Day"</span>,</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span><span class="st">""</span>,</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        orientation<span class="op">=</span><span class="st">"h"</span>,</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        yanchor<span class="op">=</span><span class="st">"bottom"</span>,</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span><span class="fl">1.02</span>,</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        xanchor<span class="op">=</span><span class="st">"center"</span>,</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="fl">0.5</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">270</span>)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/acquisition_times_by_scene.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>scene_order <span class="op">=</span> <span class="bu">sorted</span>(meta_df[<span class="st">"scene"</span>].dropna().unique())</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>view_order <span class="op">=</span> [<span class="st">"Outdoor"</span>, <span class="st">"Indoor w/ window"</span>, <span class="st">"Indoor w/o window"</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.box(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    meta_df.dropna(subset<span class="op">=</span>[<span class="st">"scene"</span>, <span class="st">"hour"</span>, <span class="st">"view"</span>]),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"scene"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"hour"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"view"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">"scene"</span>: custom_scene_order, <span class="st">"view"</span>: view_order},</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>VIEW_COLORS,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Acquisition times by scene category"</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">"Hour of Day"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span><span class="st">""</span>,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        orientation<span class="op">=</span><span class="st">"h"</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        yanchor<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span><span class="fl">1.02</span>,</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        xanchor<span class="op">=</span><span class="st">"center"</span>,</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="fl">0.5</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">270</span>)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/acquisition_times_by_scene.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Unable to display output for mime type(s): application/vnd.plotly.v1+json</code></pre>
 </div>
@@ -440,50 +433,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="cell-13" class="cell" data-execution_count="113">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>views <span class="op">=</span> [<span class="st">"Outdoor"</span>, <span class="st">"Indoor w/ window"</span>, <span class="st">"Indoor w/o window"</span>]</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># order weather by first appearance (like your code)</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>weather_order <span class="op">=</span> meta_df[<span class="st">"weather"</span>].dropna().drop_duplicates().tolist()</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># aggregate counts scene×view</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>weather_counts <span class="op">=</span> (</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    meta_df.groupby([<span class="st">"weather"</span>, <span class="st">"view"</span>])</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>           .size().reset_index(name<span class="op">=</span><span class="st">"count"</span>)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># build full grid so missing combos are zero (keeps stacks aligned)</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>full <span class="op">=</span> (</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    pd.MultiIndex.from_product([weather_order, views], names<span class="op">=</span>[<span class="st">"weather"</span>, <span class="st">"view"</span>])</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>      .to_frame(index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> (</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    full.merge(weather_counts, on<span class="op">=</span>[<span class="st">"weather"</span>, <span class="st">"view"</span>], how<span class="op">=</span><span class="st">"left"</span>)</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        .fillna({<span class="st">"count"</span>: <span class="dv">0</span>})</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>plot_df[<span class="st">"count"</span>] <span class="op">=</span> plot_df[<span class="st">"count"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.bar(</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    plot_df,</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"weather"</span>, y<span class="op">=</span><span class="st">"count"</span>,</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"view"</span>,</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">"weather"</span>: weather_order, <span class="st">"view"</span>: views},</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>VIEW_COLORS,</span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Weather conditions by view"</span>,</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># text_auto=True</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    barmode<span class="op">=</span><span class="st">"stack"</span>,</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">"Count"</span>,</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    bargap<span class="op">=</span><span class="fl">0.15</span>,</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span><span class="st">""</span>,</span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(orientation<span class="op">=</span><span class="st">"h"</span>, yanchor<span class="op">=</span><span class="st">"bottom"</span>, y<span class="op">=</span><span class="fl">1.02</span>, xanchor<span class="op">=</span><span class="st">"center"</span>, x<span class="op">=</span><span class="fl">0.5</span>),</span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>weather_order <span class="op">=</span> meta_df[<span class="st">"weather"</span>].dropna().drop_duplicates().tolist()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>weather_counts <span class="op">=</span> (</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    meta_df.groupby([<span class="st">"weather"</span>, <span class="st">"view"</span>])</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>           .size().reset_index(name<span class="op">=</span><span class="st">"count"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>full <span class="op">=</span> (</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    pd.MultiIndex.from_product([weather_order, views], names<span class="op">=</span>[<span class="st">"weather"</span>, <span class="st">"view"</span>])</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      .to_frame(index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> (</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    full.merge(weather_counts, on<span class="op">=</span>[<span class="st">"weather"</span>, <span class="st">"view"</span>], how<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        .fillna({<span class="st">"count"</span>: <span class="dv">0</span>})</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>plot_df[<span class="st">"count"</span>] <span class="op">=</span> plot_df[<span class="st">"count"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.bar(</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    plot_df,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"weather"</span>, y<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"view"</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    category_orders<span class="op">=</span>{<span class="st">"weather"</span>: weather_order, <span class="st">"view"</span>: views},</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    color_discrete_map<span class="op">=</span>VIEW_COLORS,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Weather conditions by view"</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># text_auto=True</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    barmode<span class="op">=</span><span class="st">"stack"</span>,</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">"Count"</span>,</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    bargap<span class="op">=</span><span class="fl">0.15</span>,</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span><span class="st">""</span>,</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(orientation<span class="op">=</span><span class="st">"h"</span>, yanchor<span class="op">=</span><span class="st">"bottom"</span>, y<span class="op">=</span><span class="fl">1.02</span>, xanchor<span class="op">=</span><span class="st">"center"</span>, x<span class="op">=</span><span class="fl">0.5</span>),</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
 <span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="co"># If your notebook lives in scripts/, save up one level:</span></span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/weather_by_view.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/weather_by_view.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Unable to display output for mime type(s): application/vnd.plotly.v1+json</code></pre>
 </div>
@@ -530,7 +520,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>fig.update_xaxes(tickangle<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>fig.show()</span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="co"># If your notebook lives in scripts/, save up one level:</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>fig.write_html(<span class="st">"../assets/plots/lighting_by_view.html"</span>, include_plotlyjs<span class="op">=</span><span class="st">"cdn"</span>, full_html<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Unable to display output for mime type(s): application/vnd.plotly.v1+json</code></pre>
