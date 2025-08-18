@@ -14,10 +14,10 @@ website:
         href: stats.qmd
       - text: "Download"
         href: download.qmd
-      - text: "Gallery"
-        href: gallery.qmd
-      - text: "Documentation"
-        href: documentation.qmd
+      # - text: "Gallery"
+      #   href: gallery.qmd
+      # - text: "Documentation"
+      #   href: documentation.qmd
   page-footer:
     center: |
       [![](assets/logo-mpi.png){width=180pt}](https://www.kyb.tuebingen.mpg.de/en)

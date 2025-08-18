@@ -34,12 +34,12 @@ Access spectral and spatial data
 </div>
 
 <div class="resource-card">
-**[Gallery](gallery.qmd)**  
+**[Gallery](link)**  
 View representative images from the dataset  
 </div>
 
 <div class="resource-card">
-**[Documentation](documentation.qmd)**  
+**[Documentation](link)**  
 Complete user guide and methodology (coming soon)  
 </div>
 

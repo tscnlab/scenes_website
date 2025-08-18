@@ -37,7 +37,6 @@ main .content > :not(:last-child) {
   line-height: 1.35;
 }
 
-/* Make embeds scale nicely inside cards */
 .plot-card .plotly-graph-div,
 .plot-card iframe,
 .plot-card img,
@@ -98,10 +97,11 @@ main .content > :not(:last-child) {
   margin-top: 1.2rem;
   margin-bottom: 0.3rem; 
   text-align: center;
+  color: #616060;  
 }
 .team-list .members {
   margin: 0 0 0.8rem;  
-  color: #444;        
+  color: #515050;        
   text-align: center;
 }
 
@@ -181,7 +181,7 @@ main .content > :not(:last-child) {
 .download-card .btn:hover { transform: translateY(-1px); background: #f8fafc; }
 .download-card .meta { font-size: .85rem; color: #6b7280; }
 
-/* --- Image gallery --- */
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
