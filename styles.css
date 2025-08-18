@@ -3,3 +3,208 @@
 p {
   text-align: justify
 }
+
+.map-embed { position: relative; width: 100%; padding-top: 60%;}
+.map-embed iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border: 0; border-radius: 8px;
+}
+
+main .content > :not(:last-child) {
+  margin-bottom: 1.25rem;
+}
+
+.plot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+  margin: 1rem 0;
+}
+
+.plot-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+.plot-card h3,
+.plot-card h4 {
+  margin: 0 0 .75rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.plot-card .plotly-graph-div,
+.plot-card iframe,
+.plot-card img,
+.plot-card svg,
+.plot-card canvas {
+  width: 100% !important;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.plot-card .plotly-graph-div { min-height: 320px; }
+
+.plot-card > :last-child { margin-bottom: 0; }
+
+@media (max-width: 800px) {
+  .logo-wall img {
+    height: 80px;
+    max-width: 200px;
+  }
+}
+@media (max-width: 500px) {
+  .logo-wall {
+    gap: 2rem;
+  }
+  .logo-wall img {
+    height: 65px;
+    max-width: 160px;
+  }
+}
+
+.logo-wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;             
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.logo-wall img {
+  height: 150px;           
+  max-width: 250px;      
+  object-fit: contain;
+  padding: 0.5rem;       
+  background: white;     
+  align-items: center;
+}
+
+.team-list {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+.team-list .institution {
+  font-weight: 600;    
+  font-size: 1.1rem;   
+  margin-top: 1.2rem;
+  margin-bottom: 0.3rem; 
+  text-align: center;
+  color: #616060;  
+}
+.team-list .members {
+  margin: 0 0 0.8rem;  
+  color: #515050;        
+  text-align: center;
+}
+
+.funding-wall{
+  display:flex;
+  flex-wrap:wrap;
+  gap:3rem;
+  justify-content:center;
+  align-items:center;
+  max-width: var(--content-max-width, 900px);
+  margin: 2rem auto;  
+}              
+
+.funding-wall > p{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex: 0 1 260px;
+  margin:0;
+}
+
+.funding-wall a{              
+  display:flex; align-items:center; justify-content:center;
+  text-decoration:none;
+}
+
+.funding-wall img{
+  height:150px;
+  max-width:250px;
+  width:auto;
+  object-fit:contain;
+  padding:0.5rem;
+  background:white;
+  transition:transform .2s ease;
+}
+
+.funding-wall a:hover img{ transform:scale(2); }
+
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+
+.download-card {
+  background: #fff;
+  border: 1px solid var(--quarto-border-color, #e5e7eb);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.download-card h3 {
+  margin: 0 0 .25rem 0;
+  font-size: 1.05rem;
+}
+
+.download-card p {
+  margin: 0;
+  color: #555;
+  line-height: 1.35;
+}
+
+.download-card .btn {
+  align-self: start;
+  padding: .45rem .8rem;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 1px solid #d1d5db;
+  transition: transform .08s ease, background .15s ease;
+}
+
+.download-card .btn:hover { transform: translateY(-1px); background: #f8fafc; }
+.download-card .meta { font-size: .85rem; color: #6b7280; }
+
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 0 0 1.25rem;
+}
+
+.gallery .thumb {
+  text-align: center;
+}
+
+.gallery .thumb img {
+  display: block;
+  width: 100%;
+  height: 110px;
+  object-fit: cover;    
+  border-radius: 10px;
+}
+
+.gallery .thumb em,
+.gallery .thumb p,
+.gallery .thumb > *:last-child {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 6px;
+}

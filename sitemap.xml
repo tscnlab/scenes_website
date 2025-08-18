@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://scenes-dataset.org/about.html</loc>
-    <lastmod>2025-06-13T10:49:01.881Z</lastmod>
-  </url>
-  <url>
-    <loc>https://scenes-dataset.org/imprint.html</loc>
-    <lastmod>2025-06-13T10:49:01.886Z</lastmod>
-  </url>
-  <url>
-    <loc>https://scenes-dataset.org/license.html</loc>
-    <lastmod>2025-06-13T10:49:01.886Z</lastmod>
+    <loc>https://scenes-dataset.org/download.html</loc>
+    <lastmod>2025-08-18T11:24:24.252Z</lastmod>
   </url>
   <url>
     <loc>https://scenes-dataset.org/index.html</loc>
-    <lastmod>2025-06-13T10:49:01.886Z</lastmod>
+    <lastmod>2025-08-18T11:24:24.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/scripts/plots.html</loc>
+    <lastmod>2025-08-18T11:24:24.253Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/gallery.html</loc>
+    <lastmod>2025-08-18T11:24:24.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/stats.html</loc>
+    <lastmod>2025-08-18T11:24:24.253Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/imprint.html</loc>
+    <lastmod>2025-08-18T11:24:24.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/license.html</loc>
+    <lastmod>2025-08-18T11:24:24.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/about.html</loc>
+    <lastmod>2025-08-18T11:24:24.227Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/documentation.html</loc>
+    <lastmod>2025-08-18T11:24:24.252Z</lastmod>
   </url>
 </urlset>

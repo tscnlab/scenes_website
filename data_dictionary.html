@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-08-18">
+<meta name="dcterms.date" content="2025-08-17">
 
-<title>license – SCENES Dataset</title>
+<title>Data Dictionary – SCENES Dataset</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4df3b0c4fafa0f66eafcead0ee6cff11.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,7 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -96,12 +95,12 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./stats.html"> 
-<span class="menu-text">Data at a Glance</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./download.html"> 
 <span class="menu-text">Download</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./data_dictionary.html" aria-current="page"> 
+<span class="menu-text">Data Dictionary</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -114,23 +113,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#license" id="toc-license" class="nav-link active" data-scroll-target="#license">License</a>
-  <ul class="collapse">
-  <li><a href="#license-type" id="toc-license-type" class="nav-link" data-scroll-target="#license-type">License type</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
+<h1 class="title">Data Dictionary</h1>
 </div>
 
 
@@ -141,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Last modified:</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 18, 2025</p>
+      <p class="date">August 17, 2025</p>
     </div>
   </div>
   
@@ -153,15 +144,111 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="license" class="level1">
-<h1>License</h1>
-<section id="license-type" class="level2">
-<h2 class="anchored" data-anchor-id="license-type">License type</h2>
-<p>put the terms of the license here</p>
+<p>This page documents the columns in <code>data/metadata.csv</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 57%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>filename</td>
+<td>string</td>
+<td>File identifier for the acquisition</td>
+<td><code>20230621T0830</code></td>
+</tr>
+<tr class="even">
+<td>date</td>
+<td>date</td>
+<td>Acquisition date (local)</td>
+<td><code>2023-06-21</code></td>
+</tr>
+<tr class="odd">
+<td>time</td>
+<td>time</td>
+<td>Acquisition time (local)</td>
+<td><code>08:30:00</code></td>
+</tr>
+<tr class="even">
+<td>location</td>
+<td>string</td>
+<td>Human-readable location/label</td>
+<td><code>Tübingen</code></td>
+</tr>
+<tr class="odd">
+<td>latitude</td>
+<td>float</td>
+<td>Latitude in decimal degrees</td>
+<td><code>48.5216</code></td>
+</tr>
+<tr class="even">
+<td>longitude</td>
+<td>float</td>
+<td>Longitude in decimal degrees</td>
+<td><code>9.0522</code></td>
+</tr>
+<tr class="odd">
+<td>view</td>
+<td>category</td>
+<td>View class</td>
+<td><code>Outdoor</code> / <code>Indoor w/ window</code> / <code>Indoor w/o window</code></td>
+</tr>
+<tr class="even">
+<td>scene</td>
+<td>category</td>
+<td>Scene descriptor (cleaned from parentheses)</td>
+<td><code>park</code>, <code>office</code>, <code>street</code></td>
+</tr>
+<tr class="odd">
+<td>lighting</td>
+<td>category</td>
+<td>Lighting descriptor (cleaned from parentheses)</td>
+<td><code>daylight</code>, <code>tungsten</code></td>
+</tr>
+<tr class="even">
+<td>iso</td>
+<td>int</td>
+<td>Camera ISO</td>
+<td><code>400</code></td>
+</tr>
+<tr class="odd">
+<td>ev</td>
+<td>float</td>
+<td>Exposure value or exposure compensation</td>
+<td><code>0.3</code></td>
+</tr>
+<tr class="even">
+<td>exposure_time</td>
+<td>float</td>
+<td>Exposure time (seconds)</td>
+<td><code>0.005</code></td>
+</tr>
+<tr class="odd">
+<td>aperture</td>
+<td>float</td>
+<td>F-number</td>
+<td><code>2.8</code></td>
+</tr>
+<tr class="even">
+<td>notes</td>
+<td>string</td>
+<td>Free-form notes (optional)</td>
+<td><code>cloudy</code></td>
+</tr>
+</tbody>
+</table>
 
 
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
