@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-08-16">
+<meta name="dcterms.date" content="2025-08-17">
 
-<title>Imprint – SCENES Dataset</title>
+<title>Explore Metadata – SCENES Dataset</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -73,10 +73,10 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="floating nav-fixed quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -95,8 +95,12 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./map.html"> 
-<span class="menu-text">Map</span></a>
+    <a class="nav-link" href="./download.html"> 
+<span class="menu-text">Download</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./explore.qmd"> 
+<span class="menu-text">Explore</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -106,51 +110,174 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Imprint</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-      <div>
-      <div class="quarto-title-meta-heading">Last modified:</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">August 16, 2025</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Explore Metadata</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Last modified:</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 17, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
-<p><a href="https://www.kyb.tuebingen.mpg.de/614159/translational-sensory-and-circadian-neuroscience">Max Planck Research Group Translational Sensory and Circadian Neuroscience</a></p>
-<p><a href="https://www.kyb.tuebingen.mpg.de/en">Max Planck Institute for Biological Cybernetics</a></p>
-<p>Max-Planck-Ring 8-14</p>
-<p>D-72076 Tübingen</p>
-<p>Germany</p>
-<p>Email: <a href="mailto:manuel.spitschan@tuebingen.mpg.de">manuel.spitschan@tuebingen.mpg.de</a></p>
-<p>Telephone: +49 (0)7071 601 1670</p>
+</header>
+
+
+<p>Below is an interactive table of the dataset metadata. Use the dropdowns to filter; use the search box to find specific terms; click a column header to sort.</p>
+<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:10px;">
+<div>
+<pre><code>&lt;label for="filter-view" style="font-size:12px;"&gt;View&lt;/label&gt;&lt;br/&gt;
+&lt;select id="filter-view"&gt;
+  &lt;option value=""&gt;(all)&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+</div>
+<div>
+<pre><code>&lt;label for="filter-scene" style="font-size:12px;"&gt;Scene&lt;/label&gt;&lt;br/&gt;
+&lt;select id="filter-scene"&gt;
+  &lt;option value=""&gt;(all)&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+</div>
+<div>
+<pre><code>&lt;label for="filter-location" style="font-size:12px;"&gt;Location&lt;/label&gt;&lt;br/&gt;
+&lt;select id="filter-location"&gt;
+  &lt;option value=""&gt;(all)&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+</div>
+<div style="margin-left:auto;">
+<pre><code>&lt;button id="download-filtered" style="padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:white; cursor:pointer;"&gt;
+  ⬇️ Download filtered CSV
+&lt;/button&gt;</code></pre>
+</div>
+</div>
+<div style="font-size:12px; color:#555; margin-bottom:6px;">
+<p><span id="count-text">Loading…</span></p>
+</div>
+<table id="meta" class="display" style="width:100%">
+</table>
+<!-- Dependencies (CDN) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.5.2/papaparse.min.js"></script>
+<script>
+(async function() {
+  // 1) Load CSV with PapaParse (handles commas/quotes safely)
+  const csvUrl = "data/metadata.csv";
+  const text = await fetch(csvUrl).then(r => r.text());
+  const parsed = Papa.parse(text, { header: true, dynamicTyping: false, skipEmptyLines: true });
+
+  const rows = parsed.data;
+  if (!rows.length) {
+    document.getElementById('count-text').textContent = "No rows found.";
+    return;
+  }
+
+  // 2) Decide which columns to show (reorder/add/remove as you prefer)
+  const wantedCols = [
+    "filename", "date", "time", "location", "view", "scene",
+    "latitude", "longitude", "iso", "ev"
+  ].filter(c => parsed.meta.fields.includes(c)); // keep only those that actually exist
+
+  // 3) Build DataTables column defs
+  const columns = wantedCols.map(c => ({ title: c, data: c }));
+
+  // 4) Initialize DataTable
+  const table = $('#meta').DataTable({
+    data: rows,
+    columns: columns,
+    pageLength: 25,
+    deferRender: true,
+    order: [], // no default ordering
+    dom: 'lftrip', // controls layout (length, filter, table, info, paging)
+  });
+
+  // helper: get unique sorted values from a column
+  function uniqueValues(colName) {
+    const s = new Set();
+    rows.forEach(r => { if (r[colName] !== undefined && r[colName] !== "") s.add(r[colName]); });
+    return Array.from(s).sort((a,b) => (a+"").localeCompare(b+""));
+  }
+
+  // 5) Populate dropdowns
+  function populateSelect(id, values) {
+    const sel = document.getElementById(id);
+    values.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      sel.appendChild(opt);
+    });
+  }
+  if (parsed.meta.fields.includes("view"))     populateSelect("filter-view", uniqueValues("view"));
+  if (parsed.meta.fields.includes("scene"))    populateSelect("filter-scene", uniqueValues("scene"));
+  if (parsed.meta.fields.includes("location")) populateSelect("filter-location", uniqueValues("location"));
+
+  // 6) Filtering: apply DataTables column search on change
+  const colIndex = Object.fromEntries(wantedCols.map((c,i)=>[c,i]));
+
+  function applyFilters() {
+    const view = $('#filter-view').val() || '';
+    const scene = $('#filter-scene').val() || '';
+    const loc = $('#filter-location').val() || '';
+
+    // Clear previous
+    table.columns().search('');
+
+    if (view && colIndex.view !== undefined)       table.column(colIndex.view).search('^' + $.fn.dataTable.util.escapeRegex(view) + '$', true, false);
+    if (scene && colIndex.scene !== undefined)     table.column(colIndex.scene).search('^' + $.fn.dataTable.util.escapeRegex(scene) + '$', true, false);
+    if (loc && colIndex.location !== undefined)    table.column(colIndex.location).search('^' + $.fn.dataTable.util.escapeRegex(loc) + '$', true, false);
+
+    table.draw();
+    updateCounts();
+  }
+
+  $('#filter-view, #filter-scene, #filter-location').on('change', applyFilters);
+
+  // 7) Counts text (filtered vs total)
+  function updateCounts() {
+    const filtered = table.rows({ filter: 'applied' }).count();
+    const total = table.rows().count();
+    document.getElementById('count-text').textContent = `${filtered} row(s) shown of ${total}`;
+  }
+  table.on('draw', updateCounts);
+  updateCounts();
+
+  // 8) Download filtered CSV
+  document.getElementById('download-filtered').addEventListener('click', () => {
+    const data = table.rows({ filter: 'applied' }).data().toArray();
+    if (!data.length) return;
+
+    const csv = Papa.unparse(data, { columns: wantedCols });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'SCENES_metadata_filtered.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+})();
+</script>
 
 
 

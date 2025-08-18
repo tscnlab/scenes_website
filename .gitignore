@@ -4,3 +4,12 @@
 .Ruserdata
 *.DStore
 /.quarto/
+
+# for Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.ipynb_checkpoints/

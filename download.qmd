@@ -1,0 +1,76 @@
+---
+title: "Download the SCENES Data"
+toc: true
+page-layout: article
+format:
+  html:
+    df-print: paged
+    code-fold: false
+---
+
+## Example Images
+
+Here are a few representative images from the dataset.
+
+::: {class="gallery"}
+::: {.thumb}
+![](assets/samples/outdoor.jpg){fig-alt="Outdoor lake scene"}
+*Outdoor*
+:::
+::: {.thumb}
+![](assets/samples/indoor_window.jpg){fig-alt="Indoor scene with window"}
+*Indoor w/ window*
+:::
+::: {.thumb}
+![](assets/samples/outdoor2.jpg){fig-alt="Outdoor path scene"}
+*Outdoor*
+:::
+::: {.thumb}
+![](assets/samples/indoor_nowindow.jpg){fig-alt="Indoor scene without window"}
+*Indoor no window*
+:::
+:::
+
+## Dataset Access
+
+<div class="download-grid">
+
+<div class="download-card">
+  <h3>Metadata (CSV)</h3>
+  <p>Image-level metadata with location, view, scene, and acquisition info.</p>
+  <a class="btn" href="data/20250630_SCENES_metadata_integrated_modified.csv">Download CSV</a>
+  <div class="meta">~2.1 MB • <code>text/csv</code></div>
+</div>
+
+<div class="download-card">
+  <h3>GoPro RAW (GPR)</h3>
+  <p>Original GoPro RAW files (selected subset) for spectral mapping.</p>
+  <a class="btn" href="https://example.org/gopro-raw">External link</a>
+  <div class="meta">Hosted externally</div>
+</div>
+
+<div class="download-card">
+  <h3>WP690 RAW</h3>
+  <p>Multispectral camera exports used as target LMRSI channels.</p>
+  <a class="btn" href="https://example.org/wp690-raw">External link</a>
+  <div class="meta">Hosted externally</div>
+</div>
+
+<div class="download-card">
+  <h3>Registered Pairs (PKL)</h3>
+  <p>GoPro↔WP690 registered pairs ready for model training.</p>
+  <a class="btn" href="https://example.org/registered-pairs">External link</a>
+  <div class="meta">Hosted externally</div>
+</div>
+
+</div>
+
+::: {.callout-note}
+Large assets (RAW images, registered pairs) are hosted externally to keep this site lightweight and fast.
+:::
+
+## Recommended citation
+
+Please cite the SCENES project when using this dataset:
+
+> SCENES Consortium (2025). *SCENES: An International Dataset of Naturalistic Visual Environments*. DOI link coming soon.

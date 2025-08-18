@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://scenes-dataset.org/scripts/maps.html</loc>
+    <lastmod>2025-08-17T16:32:18.909Z</lastmod>
+  </url>
+  <url>
     <loc>https://scenes-dataset.org/index.html</loc>
-    <lastmod>2025-06-12T14:07:58.988Z</lastmod>
+    <lastmod>2025-08-18T11:14:53.484Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/license.html</loc>
+    <lastmod>2025-08-16T20:53:32.212Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/map.html</loc>
+    <lastmod>2025-08-17T12:38:44.008Z</lastmod>
   </url>
   <url>
     <loc>https://scenes-dataset.org/imprint.html</loc>
-    <lastmod>2025-06-12T14:05:53.297Z</lastmod>
+    <lastmod>2025-08-16T20:53:32.212Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/about.html</loc>
+    <lastmod>2025-08-16T20:53:32.206Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/download.html</loc>
+    <lastmod>2025-08-18T11:07:59.347Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/data_dictionary.html</loc>
+    <lastmod>2025-08-17T13:23:47.255Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/explorer.html</loc>
+    <lastmod>2025-08-17T14:04:20.836Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/explore.html</loc>
+    <lastmod>2025-08-17T14:04:20.836Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/stats.html</loc>
+    <lastmod>2025-08-17T17:07:34.841Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/stats2.html</loc>
+    <lastmod>2025-08-17T16:00:15.116Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/scripts/plots.html</loc>
+    <lastmod>2025-08-17T21:06:25.247Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/documentation.html</loc>
+    <lastmod>2025-08-17T20:41:21.506Z</lastmod>
+  </url>
+  <url>
+    <loc>https://scenes-dataset.org/gallery.html</loc>
+    <lastmod>2025-08-17T20:59:11.466Z</lastmod>
   </url>
 </urlset>

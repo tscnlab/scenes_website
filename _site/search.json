@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "scripts/maps.html",
+    "href": "scripts/maps.html",
+    "title": "Dependencies",
+    "section": "",
+    "text": "import re\nimport pandas as pd\nimport plotly.express as px\nfrom itertools import product\n\nimport warnings\nwarnings.filterwarnings(\"ignore\")\n\n\nLoad dataset\n\nfpath = \"../data/20250630_SCENES_metadata_integrated_modified.xlsx\"\nmeta_integrated = pd.read_excel(fpath)\n\nmeta_df = meta_integrated.copy()\n\n\ndef extract_parentheses_content(scene):\n    scene = str(scene).strip()\n    match = re.search(r'\\((.*?)\\)', scene)\n    if match:\n        return match.group(1).strip()\n    else:\n        return \"\"\n    \nif \"scene\" in meta_df:\n    meta_df[\"scene\"] = meta_df[\"scene\"].apply(extract_parentheses_content)\nif \"lighting\" in meta_df:\n    meta_df[\"lighting\"] = meta_df[\"lighting\"].apply(extract_parentheses_content)\n\n\nmeta_df.columns\n\nIndex(['record', 'project_id', 'project_name', 'project_start', 'data_curator',\n       'project_record', 'setup', 'device_geometry', 'measurement_id',\n       'record_id', 'date', 'time', 'protocol', 'experimenter',\n       'available_$device', 'available_gloptic_spectis1',\n       'available_gigahertz-optic_msc15', 'available_jeti_spectraval1511',\n       'available_westborophotonics_wp690e-circ', 'wp690csv',\n       'available_kleininstruments_k-10a', 'available_inteldrealsense_d455',\n       'available_gopro_hero10black_video',\n       'available_gopro_hero10black_photo', 'location', 'latitude',\n       'longitude', 'direction', 'elevation', 'groundheight', 'boxtilt',\n       'boxheight', 'temperature', 'humidity', 'weather', 'other_weather',\n       'wind', 'scene', 'other_scene', 'view', 'other_view', 'lighting',\n       'other_lighting', 'technotes', 'available_all', 'hour'],\n      dtype='object')\n\n\n\nVIEW_COLORS = {\n    \"Outdoor\": \"#CD923B\",\n    \"Indoor w/ window\": \"#081A5B\",\n    \"Indoor w/o window\":  \"#426E56\"\n}\n\n\nmeta_df['hour'] = meta_df['time'].astype(str).str.zfill(4).str[:2].astype(int)\nmeta_df['date'] = pd.to_datetime(meta_df['date'], format=\"%Y%m%d\")\nmeta_df[\"date\"] = pd.to_datetime(meta_df[\"date\"], errors=\"coerce\").dt.date\nmeta_df = meta_df.sort_values(\"date\")\n\n\ncounts = (\n    meta_df.dropna(subset=[\"date\",\"view\"])\n           .groupby([\"date\",\"view\"]).size()\n           .unstack(\"view\", fill_value=0)\n)\n\nfull_idx = pd.date_range(counts.index.min(), counts.index.max(), freq=\"D\").date\ncounts = counts.reindex(full_idx, fill_value=0)\ncounts.index.name = \"date\"\n\nlong_df = counts.reset_index().melt(id_vars=\"date\", var_name=\"view\", value_name=\"count\")\nlong_df[\"date\"] = pd.to_datetime(long_df[\"date\"])\n\nfig = px.bar(\n    long_df,\n    x=\"date\", y=\"count\", color=\"view\",\n    color_discrete_map=VIEW_COLORS,\n    title=\"Indoor vs Outdoor by date\"\n)\n\nfig.update_layout(\n    bargap=0.01,\n    barmode=\"stack\",\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    legend_title=\"\",\n    legend=dict(\n        orientation=\"h\",       # horizontal\n        yanchor=\"bottom\",      # anchor at bottom of legend box\n        y=1.02,                # slightly above the plot\n        xanchor=\"center\",      # center it\n        x=0.5,\n    ),\n    height=500,\n    # width=1200\n)\n\nfig.update_xaxes(tickangle=305)\nfig.show()\n\nfig.write_html(\"../assets/plots/daily_stacked_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\n\nmeta_df = meta_df.copy()\nmeta_df[\"hour\"] = pd.to_numeric(meta_df[\"hour\"], errors=\"coerce\").astype(\"Int64\")\nmeta_df = meta_df.dropna(subset=[\"hour\", \"view\"])\nmeta_df[\"hour\"] = meta_df[\"hour\"].astype(int).clip(0, 23)\n\n# counts per hour × view\nhour_counts = (\n    meta_df.groupby([\"hour\", \"view\"])\n           .size()\n           .reset_index(name=\"count\")\n)\n\n# ensure every hour/view combo exists (0 if missing)\nhours = pd.Index(range(24), name=\"hour\")\nviews = pd.Index([v for v in VIEW_COLORS if v in meta_df[\"view\"].unique()], name=\"view\")\nfull = (\n    pd.MultiIndex.from_product([hours, views], names=[\"hour\", \"view\"])\n    .to_frame(index=False)\n)\nhour_counts = (\n    full.merge(hour_counts, on=[\"hour\", \"view\"], how=\"left\")\n        .fillna({\"count\": 0})\n)\nhour_counts[\"count\"] = hour_counts[\"count\"].astype(int)\n\n# Plotly grouped bar\nfig = px.bar(\n    hour_counts,\n    x=\"hour\", y=\"count\",\n    color=\"view\",\n    barmode=\"group\",\n    color_discrete_map=VIEW_COLORS,\n    title=\"Acquisitions by hour of day\"\n)\n\nfig.update_layout(\n    xaxis=dict(dtick=1, title=\"Hour of Day\"),\n    yaxis_title=\"Count\",\n    bargap=0.1,\n    bargroupgap=0.05,\n    legend_title=\"\",\n    legend=dict(orientation=\"h\", yanchor=\"bottom\", y=1.02, xanchor=\"center\", x=0.5),\n    height=500,\n)\n\nfig.show()\n\nfig.write_html(\"../assets/plots/hour_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\n\n# --- inputs / orders ---\ncustom_scene_order = [\n    'countryside', 'forest', 'water', 'skyscraper', 'mountain',\n    'park', 'city', 'open field', 'industry', 'road',\n    'office', 'conference room', 'corridor', 'bedroom', 'kitchen'\n]\nview_order = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\n# --- aggregate counts like your matplotlib code ---\ncombo_counts = (\n    meta_df.groupby(['scene', 'view', 'lighting'])\n           .size().reset_index(name='count')\n           .sort_values('count', ascending=False)\n)\nagg_counts = combo_counts.groupby(['scene', 'view'], as_index=False)['count'].sum()\n\n# keep only scenes present in data but respect your custom order\nscenes_in_data = [s for s in custom_scene_order if s in agg_counts['scene'].unique()]\n\n# build full grid scene×view so missing combos show as 0 (keeps stacking consistent)\nfull = pd.DataFrame(list(product(scenes_in_data, view_order)), columns=['scene','view'])\nplot_df = (full.merge(agg_counts, on=['scene','view'], how='left')\n                .fillna({'count': 0}))\nplot_df['count'] = plot_df['count'].astype(int)\n\n# --- plotly stacked bar with inside labels ---\nfig = px.bar(\n    plot_df,\n    x='scene', y='count', color='view',\n    category_orders={'scene': scenes_in_data, 'view': view_order},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Scene distribution by view\",\n    # text_auto=True,\n)\n\nfig.update_layout(\n    barmode='stack',\n    xaxis_title=None,\n    yaxis_title='Count',\n    legend_title='',\n    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='center', x=0.5),\n    height=500,\n    bargap=0.15\n)\n\nfig.update_xaxes(tickangle=270)\n\nfig.show()\n\nfig.write_html(\"../assets/plots/scene_distribution_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\n\nscene_order = sorted(meta_df[\"scene\"].dropna().unique())\nview_order = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\nfig = px.box(\n    meta_df.dropna(subset=[\"scene\", \"hour\", \"view\"]),\n    x=\"scene\",\n    y=\"hour\",\n    color=\"view\",\n    category_orders={\"scene\": custom_scene_order, \"view\": view_order},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Acquisition times by scene category\"\n)\n\nfig.update_layout(\n    xaxis_title=None,\n    yaxis_title=\"Hour of Day\",\n    legend_title=\"\",\n    legend=dict(\n        orientation=\"h\",\n        yanchor=\"bottom\",\n        y=1.02,\n        xanchor=\"center\",\n        x=0.5\n    ),\n    height=500\n)\nfig.update_xaxes(tickangle=270)\n\nfig.show()\nfig.write_html(\"../assets/plots/acquisition_times_by_scene.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\nviews = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\n# order weather by first appearance (like your code)\nweather_order = meta_df[\"weather\"].dropna().drop_duplicates().tolist()\n\n# aggregate counts scene×view\nweather_counts = (\n    meta_df.groupby([\"weather\", \"view\"])\n           .size().reset_index(name=\"count\")\n)\n\n# build full grid so missing combos are zero (keeps stacks aligned)\nfull = (\n    pd.MultiIndex.from_product([weather_order, views], names=[\"weather\", \"view\"])\n      .to_frame(index=False)\n)\nplot_df = (\n    full.merge(weather_counts, on=[\"weather\", \"view\"], how=\"left\")\n        .fillna({\"count\": 0})\n)\nplot_df[\"count\"] = plot_df[\"count\"].astype(int)\n\nfig = px.bar(\n    plot_df,\n    x=\"weather\", y=\"count\",\n    color=\"view\",\n    category_orders={\"weather\": weather_order, \"view\": views},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Weather conditions by view\",\n    # text_auto=True\n)\n\nfig.update_layout(\n    barmode=\"stack\",\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    bargap=0.15,\n    legend_title=\"\",\n    legend=dict(orientation=\"h\", yanchor=\"bottom\", y=1.02, xanchor=\"center\", x=0.5),\n    height=500,\n)\n\nfig.update_xaxes(tickangle=0)\nfig.show()\n# If your notebook lives in scripts/, save up one level:\nfig.write_html(\"../assets/plots/weather_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\nviews = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\nlighting_order = meta_df[\"lighting\"].dropna().drop_duplicates().tolist()\n\nlighting_counts = (\n    meta_df.groupby([\"lighting\", \"view\"])\n           .size().reset_index(name=\"count\")\n)\n\nfull = (\n    pd.MultiIndex.from_product([lighting_order, views], names=[\"lighting\", \"view\"])\n      .to_frame(index=False)\n)\nplot_df = (\n    full.merge(lighting_counts, on=[\"lighting\", \"view\"], how=\"left\")\n        .fillna({\"count\": 0})\n)\nplot_df[\"count\"] = plot_df[\"count\"].astype(int)\n\nfig = px.bar(\n    plot_df,\n    x=\"lighting\", y=\"count\",\n    color=\"view\",\n    category_orders={\"lighting\": lighting_order, \"view\": views},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Lighting conditions by view\",\n    # text_auto=True\n)\n\nfig.update_layout(\n    barmode=\"stack\",\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    bargap=0.15,\n    legend_title=\"\",\n    legend=dict(orientation=\"h\", yanchor=\"bottom\", y=1.02, xanchor=\"center\", x=0.5),\n    height=500,\n)\n\nfig.update_xaxes(tickangle=0)\nfig.show()\n# If your notebook lives in scripts/, save up one level:\nfig.write_html(\"../assets/plots/lighting_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\nfig = px.histogram(\n    meta_df,\n    x=\"view\",\n    color=\"view\",\n    color_discrete_map=VIEW_COLORS,\n    title=\"Distribution of view types\",\n    # text_auto=True\n)\n\nfig.update_layout(\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    bargap=0.15,\n    legend_title=\"\",\n    legend=dict(\n        orientation=\"h\",\n        yanchor=\"bottom\",\n        y=1.02,\n        xanchor=\"center\",\n        x=0.5\n    ),\n    height=450\n)\n\nfig.show()\n\nfig.write_html(\"../assets/plots/view_distribution.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "SCENES Dataset",
@@ -11,14 +18,35 @@
     "href": "index.html#measurement-locations",
     "title": "SCENES Dataset",
     "section": "Measurement Locations",
-    "text": "Measurement Locations"
+    "text": "Measurement Locations\n\n\n\nThe interactive map shows where images were acquired. Pan/zoom the map and click markers for details."
   },
   {
     "objectID": "index.html#partner-institutions-team-members",
     "href": "index.html#partner-institutions-team-members",
     "title": "SCENES Dataset",
     "section": "Partner Institutions & Team Members",
-    "text": "Partner Institutions & Team Members\n\nTechnical University of Munich & Max Planck Institute for Biological Cybernetics\n \nNiloufar Tabandeh\nProf. Dr. Manuel Spitschan\n\n\nNational Research Council Canada\n\nDr. Jennifer Veitch\n\n\nCzech Technical University in Prague\n\nDr. Lenka Maierova\nMartina Liberska\n\n\nÉcole nationale des travaux publics de l’État (ENTPE)\n\nDr. Sophie Jost\nDr. Dominique Dumortier\nAiman Reza\n\n\nInstitut national de la santé et de la recherche médicale (INSERM)\n\nDr. Claude Gronfier"
+    "text": "Partner Institutions & Team Members\n\n     \n\n\n\nTechnical University of Munich & Max Planck Institute for Biological Cybernetics\n\n\nNiloufar Tabandeh  |  Prof. Dr. Manuel Spitschan\n\n\nNational Research Council Canada\n\n\nDr. Jennifer Veitch\n\n\nCzech Technical University in Prague\n\n\nDr. Lenka Maierova  |  Martina Liberska\n\n\nÉcole nationale des travaux publics de l’État (ENTPE)\n\n\nDr. Sophie Jost  |  Dr. Dominique Dumortier  |  Aiman Reza\n\n\nInstitut national de la santé et de la recherche médicale (INSERM)\n\n\nDr. Claude Gronfier"
+  },
+  {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "put the terms of the license here"
+  },
+  {
+    "objectID": "license.html#license-type",
+    "href": "license.html#license-type",
+    "title": "License",
+    "section": "",
+    "text": "put the terms of the license here"
+  },
+  {
+    "objectID": "map.html",
+    "href": "map.html",
+    "title": "Acquisition Map",
+    "section": "",
+    "text": "The interactive map shows where images were acquired.\n\n\nHow to regenerate: run python scripts/build_map.py to update data/map.html."
   },
   {
     "objectID": "imprint.html",
@@ -26,5 +54,229 @@
     "title": "Imprint",
     "section": "",
     "text": "Max Planck Research Group Translational Sensory and Circadian Neuroscience\nMax Planck Institute for Biological Cybernetics\nMax-Planck-Ring 8-14\nD-72076 Tübingen\nGermany\nEmail: manuel.spitschan@tuebingen.mpg.de\nTelephone: +49 (0)7071 601 1670"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html#measurement-locations-1",
+    "href": "index.html#measurement-locations-1",
+    "title": "SCENES Dataset",
+    "section": "Measurement Locations",
+    "text": "Measurement Locations\n\n\n\nTip: Pan/zoom the map and click markers for details."
+  },
+  {
+    "objectID": "download.html",
+    "href": "download.html",
+    "title": "Download the SCENES Data",
+    "section": "",
+    "text": "Here are a few representative images from the dataset.\n\n\n Outdoor\n\n\n Indoor w/ window\n\n\n Outdoor\n\n\n Indoor no window"
+  },
+  {
+    "objectID": "download.html#whats-included-here",
+    "href": "download.html#whats-included-here",
+    "title": "Download",
+    "section": "",
+    "text": "Metadata CSV (lightweight): data/metadata.csv\n\n\nLarge assets (RAWs, registered pairs) are hosted externally to keep this site fast."
+  },
+  {
+    "objectID": "download.html#external-data-access",
+    "href": "download.html#external-data-access",
+    "title": "Download the SCENES Data",
+    "section": "External data access",
+    "text": "External data access\n\nGoPro RAW (GPR): \nWP690 RAW: \nRegistered Pairs / Patches: \nDOI / Citation: \n\n\nRecommended citation"
+  },
+  {
+    "objectID": "data_dictionary.html",
+    "href": "data_dictionary.html",
+    "title": "Data Dictionary",
+    "section": "",
+    "text": "This page documents the columns in data/metadata.csv.\n\n\n\n\n\n\n\n\n\nColumn\nType\nDescription\nExample\n\n\n\n\nfilename\nstring\nFile identifier for the acquisition\n20230621T0830\n\n\ndate\ndate\nAcquisition date (local)\n2023-06-21\n\n\ntime\ntime\nAcquisition time (local)\n08:30:00\n\n\nlocation\nstring\nHuman-readable location/label\nTübingen\n\n\nlatitude\nfloat\nLatitude in decimal degrees\n48.5216\n\n\nlongitude\nfloat\nLongitude in decimal degrees\n9.0522\n\n\nview\ncategory\nView class\nOutdoor / Indoor w/ window / Indoor w/o window\n\n\nscene\ncategory\nScene descriptor (cleaned from parentheses)\npark, office, street\n\n\nlighting\ncategory\nLighting descriptor (cleaned from parentheses)\ndaylight, tungsten\n\n\niso\nint\nCamera ISO\n400\n\n\nev\nfloat\nExposure value or exposure compensation\n0.3\n\n\nexposure_time\nfloat\nExposure time (seconds)\n0.005\n\n\naperture\nfloat\nF-number\n2.8\n\n\nnotes\nstring\nFree-form notes (optional)\ncloudy"
+  },
+  {
+    "objectID": "download.html#example-images",
+    "href": "download.html#example-images",
+    "title": "Download the SCENES Data",
+    "section": "",
+    "text": "Here are a few representative images from the dataset.\n\n\n Outdoor\n\n\n Indoor w/ window\n\n\n Outdoor\n\n\n Indoor no window"
+  },
+  {
+    "objectID": "download.html#dataset-access",
+    "href": "download.html#dataset-access",
+    "title": "Download the SCENES Data",
+    "section": "Dataset Access",
+    "text": "Dataset Access\n\n\n\nMetadata (CSV)\n\n\nImage-level metadata with location, view, scene, and acquisition info.\n\nDownload CSV\n\n~2.1 MB • text/csv\n\n\n\n\nGoPro RAW (GPR)\n\n\nOriginal GoPro RAW files (selected subset) for spectral mapping.\n\nExternal link\n\nHosted externally\n\n\n\n\nWP690 RAW\n\n\nMultispectral camera exports used as target LMRSI channels.\n\nExternal link\n\nHosted externally\n\n\n\n\nRegistered Pairs (PKL)\n\n\nGoPro↔︎WP690 registered pairs ready for model training.\n\nExternal link\n\nHosted externally\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nLarge assets (RAW images, registered pairs) are hosted externally to keep this site lightweight and fast."
+  },
+  {
+    "objectID": "explorer.html",
+    "href": "explorer.html",
+    "title": "Explore Metadata",
+    "section": "",
+    "text": "Below is an interactive table of the dataset metadata. Use the dropdowns to filter; use the search box to find specific terms; click a column header to sort.\n\n\n&lt;label for=\"filter-view\" style=\"font-size:12px;\"&gt;View&lt;/label&gt;&lt;br/&gt;\n&lt;select id=\"filter-view\"&gt;\n  &lt;option value=\"\"&gt;(all)&lt;/option&gt;\n&lt;/select&gt;\n\n\n&lt;label for=\"filter-scene\" style=\"font-size:12px;\"&gt;Scene&lt;/label&gt;&lt;br/&gt;\n&lt;select id=\"filter-scene\"&gt;\n  &lt;option value=\"\"&gt;(all)&lt;/option&gt;\n&lt;/select&gt;\n\n\n&lt;label for=\"filter-location\" style=\"font-size:12px;\"&gt;Location&lt;/label&gt;&lt;br/&gt;\n&lt;select id=\"filter-location\"&gt;\n  &lt;option value=\"\"&gt;(all)&lt;/option&gt;\n&lt;/select&gt;\n\n\n&lt;button id=\"download-filtered\" style=\"padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:white; cursor:pointer;\"&gt;\n  ⬇️ Download filtered CSV\n&lt;/button&gt;\n\n\n\nLoading…"
+  },
+  {
+    "objectID": "explore.html",
+    "href": "explore.html",
+    "title": "Explore Metadata",
+    "section": "",
+    "text": "Below is an interactive table of the dataset metadata. Use the dropdowns to filter; use the search box to find specific terms; click a column header to sort.\n\n\n&lt;label for=\"filter-view\" style=\"font-size:12px;\"&gt;View&lt;/label&gt;&lt;br/&gt;\n&lt;select id=\"filter-view\"&gt;\n  &lt;option value=\"\"&gt;(all)&lt;/option&gt;\n&lt;/select&gt;\n\n\n&lt;label for=\"filter-scene\" style=\"font-size:12px;\"&gt;Scene&lt;/label&gt;&lt;br/&gt;\n&lt;select id=\"filter-scene\"&gt;\n  &lt;option value=\"\"&gt;(all)&lt;/option&gt;\n&lt;/select&gt;\n\n\n&lt;label for=\"filter-location\" style=\"font-size:12px;\"&gt;Location&lt;/label&gt;&lt;br/&gt;\n&lt;select id=\"filter-location\"&gt;\n  &lt;option value=\"\"&gt;(all)&lt;/option&gt;\n&lt;/select&gt;\n\n\n&lt;button id=\"download-filtered\" style=\"padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:white; cursor:pointer;\"&gt;\n  ⬇️ Download filtered CSV\n&lt;/button&gt;\n\n\n\nLoading…"
+  },
+  {
+    "objectID": "stats.html",
+    "href": "stats.html",
+    "title": "SCENES Overview",
+    "section": "",
+    "text": "This page gives a quick look at what’s inside the dataset. It shows how the images are distributed by view type, time, scene, weather, and lighting. Each section highlights the main patterns you can spot from the plots."
+  },
+  {
+    "objectID": "stats.html#temporal",
+    "href": "stats.html#temporal",
+    "title": "SCENES Overview",
+    "section": "Temporal",
+    "text": "Temporal\nData collection happened in bursts over several months, reflecting field campaigns and site availability. Outdoor shots are more evenly spread, while indoor sessions are clustered into shorter time windows.\n                        \n                                            \n\nMost captures were taken between 9 AM and 5 PM, peaking around midday. That matches typical daylight hours but still leaves good coverage in the morning and late afternoon."
+  },
+  {
+    "objectID": "stats.html#scene",
+    "href": "stats.html#scene",
+    "title": "SCENES Overview",
+    "section": "Scene",
+    "text": "Scene\nThe dataset covers a mix of environments. On the outdoor side, countryside and forest dominate, while for indoor shots, offices lead the way, with some extra coverage from conference rooms, corridors, and bedrooms.\n                        \n                                            \n\nCapture times follow expectations: outdoor scenes center on the middle of the day, while indoor environments stretch later into the afternoon."
+  },
+  {
+    "objectID": "stats.html#weather-lighting",
+    "href": "stats.html#weather-lighting",
+    "title": "SCENES Overview",
+    "section": "Weather & Lighting",
+    "text": "Weather & Lighting\nMost images come from clear or partly cloudy days. There’s also a fair amount of overcast/cloudy coverage, which helps include softer light. Rare conditions like rain, fog, drizzle, and snow are present but limited.\n                        \n                                            \n\nLighting conditions are mostly daylight, with a smaller but useful set of mixed light (daylight + electric) and a handful of purely artificial light samples. This gives the dataset range across natural and human-made lighting setups.\n                        \n                                            \n\n\n\nOverall, the dataset offers a broad mix of outdoor and indoor scenes, captured across different times of day, seasons, weather conditions, and lighting setups. Outdoor shots dominate, but there’s still solid coverage of indoor environments, including both naturally lit and windowless spaces.\nThis diversity is intentional: it makes the dataset useful for studying how context (scene, weather, or lighting) affects image appearance and for training models that need to generalize beyond a single environment. In other words, the numbers and plots above aren’t just statistics — they set the stage for building models that are robust to real-world variability."
+  },
+  {
+    "objectID": "stats2.html",
+    "href": "stats2.html",
+    "title": "Stats 2",
+    "section": "",
+    "text": "&lt;h3&gt;Indoor vs Outdoor by Date&lt;/h3&gt;\n::: {include=assets/plots/daily_stacked_by_view.html}\n:::\n\n\n&lt;h3&gt;Distribution by Hour of Day&lt;/h3&gt;\n::: {include=assets/plots/hour_by_view.html}\n:::\n\n\n&lt;h3&gt;Acquisition Times by Scene&lt;/h3&gt;\n::: {include=assets/plots/acquisition_times_by_scene.html}\n:::\n\n\n&lt;h3&gt;Scene Distribution by View&lt;/h3&gt;\n::: {include=assets/plots/scene_distribution_by_view.html}\n:::\n\n\n&lt;h3&gt;Weather by View&lt;/h3&gt;\n::: {include=assets/plots/weather_by_view.html}\n:::\n\n\n&lt;h3&gt;Lighting by View&lt;/h3&gt;\n::: {include=assets/plots/lighting_by_view.html}\n:::"
+  },
+  {
+    "objectID": "stats.html#view",
+    "href": "stats.html#view",
+    "title": "SCENES Overview",
+    "section": "View",
+    "text": "View\nOutdoor shots make up the largest part of the dataset. Indoor scenes are split between spaces with windows (plenty of natural light) and enclosed rooms without windows. This balance makes it possible to compare natural vs. artificial lighting conditions."
+  },
+  {
+    "objectID": "stats.html#light-and",
+    "href": "stats.html#light-and",
+    "title": "SCENES Statistics",
+    "section": "Light and",
+    "text": "Light and"
+  },
+  {
+    "objectID": "stats.html#light-and-weather",
+    "href": "stats.html#light-and-weather",
+    "title": "SCENES Statistics",
+    "section": "Light and weather",
+    "text": "Light and weather\n\n\n\n\n\n\nWeather & Lighting effects"
+  },
+  {
+    "objectID": "stats.html#wrap-up",
+    "href": "stats.html#wrap-up",
+    "title": "SCENES Statistics",
+    "section": "Wrap-up",
+    "text": "Wrap-up\nOverall, the dataset offers a broad mix of outdoor and indoor scenes, captured across different times of day, seasons, weather conditions, and lighting setups. Outdoor shots dominate, but there’s still solid coverage of indoor environments, including both naturally lit and windowless spaces.\nThis diversity is intentional: it makes the dataset useful for studying how context (scene, weather, or lighting) affects image appearance and for training models that need to generalize beyond a single environment. In other words, the numbers and plots above aren’t just statistics — they set the stage for building models that are robust to real-world variability."
+  },
+  {
+    "objectID": "index.html#where-the-data-was-collected",
+    "href": "index.html#where-the-data-was-collected",
+    "title": "SCENES Dataset",
+    "section": "Where the Data Was Collected",
+    "text": "Where the Data Was Collected\n\n\n\nExplore the interactive map to see all acquisition sites. Pan, zoom, and click markers for details about each scene.\n\nThe dataset and documentation are actively evolving. Check back for new releases."
+  },
+  {
+    "objectID": "index.html#resources-1",
+    "href": "index.html#resources-1",
+    "title": "SCENES Dataset",
+    "section": "Resources",
+    "text": "Resources\n\n📊 Statistics: Explore dataset distributions\n\n📁 Download: Data access (coming soon)\n\n📖 Documentation: User guide (coming soon)"
+  },
+  {
+    "objectID": "index.html#resources",
+    "href": "index.html#resources",
+    "title": "SCENES Dataset",
+    "section": "Resources",
+    "text": "Resources\n\n📊 Statistics: Explore dataset distributions\n\n📁 Download: Data access (coming soon)\n\n📖 Documentation: User guide (coming soon)"
+  },
+  {
+    "objectID": "scripts/plots.html",
+    "href": "scripts/plots.html",
+    "title": "Dependencies",
+    "section": "",
+    "text": "import re\nimport pandas as pd\nimport plotly.express as px\nfrom itertools import product\n\nimport warnings\nwarnings.filterwarnings(\"ignore\")\n\n\nLoad dataset\n\nfpath = \"../data/20250630_SCENES_metadata_integrated_modified.xlsx\"\nmeta_integrated = pd.read_excel(fpath)\n\nmeta_df = meta_integrated.copy()\n\n\ndef extract_parentheses_content(scene):\n    scene = str(scene).strip()\n    match = re.search(r'\\((.*?)\\)', scene)\n    if match:\n        return match.group(1).strip()\n    else:\n        return \"\"\n    \nif \"scene\" in meta_df:\n    meta_df[\"scene\"] = meta_df[\"scene\"].apply(extract_parentheses_content)\nif \"lighting\" in meta_df:\n    meta_df[\"lighting\"] = meta_df[\"lighting\"].apply(extract_parentheses_content)\n\n\nmeta_df.columns\n\nIndex(['record', 'project_id', 'project_name', 'project_start', 'data_curator',\n       'project_record', 'setup', 'device_geometry', 'measurement_id',\n       'record_id', 'date', 'time', 'protocol', 'experimenter',\n       'available_$device', 'available_gloptic_spectis1',\n       'available_gigahertz-optic_msc15', 'available_jeti_spectraval1511',\n       'available_westborophotonics_wp690e-circ', 'wp690csv',\n       'available_kleininstruments_k-10a', 'available_inteldrealsense_d455',\n       'available_gopro_hero10black_video',\n       'available_gopro_hero10black_photo', 'location', 'latitude',\n       'longitude', 'direction', 'elevation', 'groundheight', 'boxtilt',\n       'boxheight', 'temperature', 'humidity', 'weather', 'other_weather',\n       'wind', 'scene', 'other_scene', 'view', 'other_view', 'lighting',\n       'other_lighting', 'technotes', 'available_all', 'hour'],\n      dtype='object')\n\n\n\nVIEW_COLORS = {\n    \"Outdoor\": \"#CD923B\",\n    \"Indoor w/ window\": \"#081A5B\",\n    \"Indoor w/o window\":  \"#426E56\"\n}\n\n\nmeta_df['hour'] = meta_df['time'].astype(str).str.zfill(4).str[:2].astype(int)\nmeta_df['date'] = pd.to_datetime(meta_df['date'], format=\"%Y%m%d\")\nmeta_df[\"date\"] = pd.to_datetime(meta_df[\"date\"], errors=\"coerce\").dt.date\nmeta_df = meta_df.sort_values(\"date\")\n\n\ncounts = (\n    meta_df.dropna(subset=[\"date\",\"view\"])\n           .groupby([\"date\",\"view\"]).size()\n           .unstack(\"view\", fill_value=0)\n)\n\nfull_idx = pd.date_range(counts.index.min(), counts.index.max(), freq=\"D\").date\ncounts = counts.reindex(full_idx, fill_value=0)\ncounts.index.name = \"date\"\n\nlong_df = counts.reset_index().melt(id_vars=\"date\", var_name=\"view\", value_name=\"count\")\nlong_df[\"date\"] = pd.to_datetime(long_df[\"date\"])\n\nfig = px.bar(\n    long_df,\n    x=\"date\", y=\"count\", color=\"view\",\n    color_discrete_map=VIEW_COLORS,\n    title=\"Indoor vs Outdoor by date\"\n)\n\nfig.update_layout(\n    bargap=0.01,\n    barmode=\"stack\",\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    legend_title=\"\",\n    legend=dict(\n        orientation=\"h\",       \n        yanchor=\"bottom\",      \n        y=1.02,                \n        xanchor=\"center\",      \n        x=0.5,\n    ),\n    height=500,\n)\n\nfig.update_xaxes(tickangle=305)\nfig.show()\n\nfig.write_html(\"../assets/plots/daily_stacked_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\n\nmeta_df = meta_df.copy()\nmeta_df[\"hour\"] = pd.to_numeric(meta_df[\"hour\"], errors=\"coerce\").astype(\"Int64\")\nmeta_df = meta_df.dropna(subset=[\"hour\", \"view\"])\nmeta_df[\"hour\"] = meta_df[\"hour\"].astype(int).clip(0, 23)\n\nhour_counts = (\n    meta_df.groupby([\"hour\", \"view\"])\n           .size()\n           .reset_index(name=\"count\")\n)\n\nhours = pd.Index(range(24), name=\"hour\")\nviews = pd.Index([v for v in VIEW_COLORS if v in meta_df[\"view\"].unique()], name=\"view\")\nfull = (\n    pd.MultiIndex.from_product([hours, views], names=[\"hour\", \"view\"])\n    .to_frame(index=False)\n)\nhour_counts = (\n    full.merge(hour_counts, on=[\"hour\", \"view\"], how=\"left\")\n        .fillna({\"count\": 0})\n)\nhour_counts[\"count\"] = hour_counts[\"count\"].astype(int)\n\nfig = px.bar(\n    hour_counts,\n    x=\"hour\", y=\"count\",\n    color=\"view\",\n    barmode=\"group\",\n    color_discrete_map=VIEW_COLORS,\n    title=\"Acquisitions by hour of day\"\n)\n\nfig.update_layout(\n    xaxis=dict(dtick=1, title=\"Hour of Day\"),\n    yaxis_title=\"Count\",\n    bargap=0.1,\n    bargroupgap=0.05,\n    legend_title=\"\",\n    legend=dict(orientation=\"h\", yanchor=\"bottom\", y=1.02, xanchor=\"center\", x=0.5),\n    height=500,\n)\n\nfig.show()\n\nfig.write_html(\"../assets/plots/hour_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\n\n# --- inputs / orders ---\ncustom_scene_order = [\n    'countryside', 'forest', 'water', 'skyscraper', 'mountain',\n    'park', 'city', 'open field', 'industry', 'road',\n    'office', 'conference room', 'corridor', 'bedroom', 'kitchen'\n]\nview_order = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\n# --- aggregate counts like your matplotlib code ---\ncombo_counts = (\n    meta_df.groupby(['scene', 'view', 'lighting'])\n           .size().reset_index(name='count')\n           .sort_values('count', ascending=False)\n)\nagg_counts = combo_counts.groupby(['scene', 'view'], as_index=False)['count'].sum()\n\n# keep only scenes present in data but respect your custom order\nscenes_in_data = [s for s in custom_scene_order if s in agg_counts['scene'].unique()]\n\n# build full grid scene×view so missing combos show as 0 (keeps stacking consistent)\nfull = pd.DataFrame(list(product(scenes_in_data, view_order)), columns=['scene','view'])\nplot_df = (full.merge(agg_counts, on=['scene','view'], how='left')\n                .fillna({'count': 0}))\nplot_df['count'] = plot_df['count'].astype(int)\n\n# --- plotly stacked bar with inside labels ---\nfig = px.bar(\n    plot_df,\n    x='scene', y='count', color='view',\n    category_orders={'scene': scenes_in_data, 'view': view_order},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Scene distribution by view\",\n    # text_auto=True,\n)\n\nfig.update_layout(\n    barmode='stack',\n    xaxis_title=None,\n    yaxis_title='Count',\n    legend_title='',\n    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='center', x=0.5),\n    height=500,\n    bargap=0.15\n)\n\nfig.update_xaxes(tickangle=270)\n\nfig.show()\n\nfig.write_html(\"../assets/plots/scene_distribution_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\n\nscene_order = sorted(meta_df[\"scene\"].dropna().unique())\nview_order = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\nfig = px.box(\n    meta_df.dropna(subset=[\"scene\", \"hour\", \"view\"]),\n    x=\"scene\",\n    y=\"hour\",\n    color=\"view\",\n    category_orders={\"scene\": custom_scene_order, \"view\": view_order},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Acquisition times by scene category\"\n)\n\nfig.update_layout(\n    xaxis_title=None,\n    yaxis_title=\"Hour of Day\",\n    legend_title=\"\",\n    legend=dict(\n        orientation=\"h\",\n        yanchor=\"bottom\",\n        y=1.02,\n        xanchor=\"center\",\n        x=0.5\n    ),\n    height=500\n)\nfig.update_xaxes(tickangle=270)\n\nfig.show()\nfig.write_html(\"../assets/plots/acquisition_times_by_scene.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\nviews = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\n# order weather by first appearance (like your code)\nweather_order = meta_df[\"weather\"].dropna().drop_duplicates().tolist()\n\n# aggregate counts scene×view\nweather_counts = (\n    meta_df.groupby([\"weather\", \"view\"])\n           .size().reset_index(name=\"count\")\n)\n\n# build full grid so missing combos are zero (keeps stacks aligned)\nfull = (\n    pd.MultiIndex.from_product([weather_order, views], names=[\"weather\", \"view\"])\n      .to_frame(index=False)\n)\nplot_df = (\n    full.merge(weather_counts, on=[\"weather\", \"view\"], how=\"left\")\n        .fillna({\"count\": 0})\n)\nplot_df[\"count\"] = plot_df[\"count\"].astype(int)\n\nfig = px.bar(\n    plot_df,\n    x=\"weather\", y=\"count\",\n    color=\"view\",\n    category_orders={\"weather\": weather_order, \"view\": views},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Weather conditions by view\",\n    # text_auto=True\n)\n\nfig.update_layout(\n    barmode=\"stack\",\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    bargap=0.15,\n    legend_title=\"\",\n    legend=dict(orientation=\"h\", yanchor=\"bottom\", y=1.02, xanchor=\"center\", x=0.5),\n    height=500,\n)\n\nfig.update_xaxes(tickangle=0)\nfig.show()\n# If your notebook lives in scripts/, save up one level:\nfig.write_html(\"../assets/plots/weather_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\nviews = [\"Outdoor\", \"Indoor w/ window\", \"Indoor w/o window\"]\n\nlighting_order = meta_df[\"lighting\"].dropna().drop_duplicates().tolist()\n\nlighting_counts = (\n    meta_df.groupby([\"lighting\", \"view\"])\n           .size().reset_index(name=\"count\")\n)\n\nfull = (\n    pd.MultiIndex.from_product([lighting_order, views], names=[\"lighting\", \"view\"])\n      .to_frame(index=False)\n)\nplot_df = (\n    full.merge(lighting_counts, on=[\"lighting\", \"view\"], how=\"left\")\n        .fillna({\"count\": 0})\n)\nplot_df[\"count\"] = plot_df[\"count\"].astype(int)\n\nfig = px.bar(\n    plot_df,\n    x=\"lighting\", y=\"count\",\n    color=\"view\",\n    category_orders={\"lighting\": lighting_order, \"view\": views},\n    color_discrete_map=VIEW_COLORS,\n    title=\"Lighting conditions by view\",\n    # text_auto=True\n)\n\nfig.update_layout(\n    barmode=\"stack\",\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    bargap=0.15,\n    legend_title=\"\",\n    legend=dict(orientation=\"h\", yanchor=\"bottom\", y=1.02, xanchor=\"center\", x=0.5),\n    height=500,\n)\n\nfig.update_xaxes(tickangle=0)\nfig.show()\n# If your notebook lives in scripts/, save up one level:\nfig.write_html(\"../assets/plots/lighting_by_view.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json\n\n\n\nfig = px.histogram(\n    meta_df,\n    x=\"view\",\n    color=\"view\",\n    color_discrete_map=VIEW_COLORS,\n    title=\"Distribution of view types\",\n    # text_auto=True\n)\n\nfig.update_layout(\n    xaxis_title=None,\n    yaxis_title=\"Count\",\n    bargap=0.15,\n    legend_title=\"\",\n    legend=dict(\n        orientation=\"h\",\n        yanchor=\"bottom\",\n        y=1.02,\n        xanchor=\"center\",\n        x=0.5\n    ),\n    height=450\n)\n\nfig.show()\n\nfig.write_html(\"../assets/plots/view_distribution.html\", include_plotlyjs=\"cdn\", full_html=False)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json"
+  },
+  {
+    "objectID": "index.html#note-the-dataset-and-documentation-are-actively-evolving.-check-back-for-new-releases.",
+    "href": "index.html#note-the-dataset-and-documentation-are-actively-evolving.-check-back-for-new-releases.",
+    "title": "SCENES Dataset",
+    "section": "> [!NOTE] The dataset and documentation are actively evolving. Check back for new releases.",
+    "text": "&gt; [!NOTE] The dataset and documentation are actively evolving. Check back for new releases."
+  },
+  {
+    "objectID": "index.html#the-dataset-and-documentation-are-actively-evolving.-check-back-for-new-releases.",
+    "href": "index.html#the-dataset-and-documentation-are-actively-evolving.-check-back-for-new-releases.",
+    "title": "SCENES Dataset",
+    "section": "> The dataset and documentation are actively evolving. Check back for new releases.",
+    "text": "&gt; The dataset and documentation are actively evolving. Check back for new releases."
+  },
+  {
+    "objectID": "index.html#dr.-claude-gronfier",
+    "href": "index.html#dr.-claude-gronfier",
+    "title": "SCENES Dataset",
+    "section": "Dr. Claude Gronfier",
+    "text": "Dr. Claude Gronfier"
+  },
+  {
+    "objectID": "index.html#funding",
+    "href": "index.html#funding",
+    "title": "SCENES Dataset",
+    "section": "Funding",
+    "text": "Funding\nThis project is supported by the following organizations:"
+  },
+  {
+    "objectID": "download.html#recommended-citation",
+    "href": "download.html#recommended-citation",
+    "title": "Download the SCENES Data",
+    "section": "Recommended citation",
+    "text": "Recommended citation\nPlease cite the SCENES project when using this dataset:\n\nSCENES Consortium (2025). SCENES: An International Dataset of Naturalistic Visual Environments. DOI link coming soon."
+  },
+  {
+    "objectID": "documentation.html",
+    "href": "documentation.html",
+    "title": "Documentation",
+    "section": "",
+    "text": "Documentation"
+  },
+  {
+    "objectID": "gallery.html",
+    "href": "gallery.html",
+    "title": "Gallery",
+    "section": "",
+    "text": "This sheet shows all unique physical scenes in the SCENES dataset. Click the image to enlarge."
+  },
+  {
+    "objectID": "gallery.html#overview-of-scenes",
+    "href": "gallery.html#overview-of-scenes",
+    "title": "Gallery",
+    "section": "",
+    "text": "This sheet shows all unique physical scenes in the SCENES dataset.\n Click the image below to enlarge."
+  },
+  {
+    "objectID": "index.html#title-scenes-dataset",
+    "href": "index.html#title-scenes-dataset",
+    "title": "SCENES Dataset",
+    "section": "title: “SCENES Dataset”",
+    "text": "title: “SCENES Dataset”\n\nThe SCENES Dataset is an international collaborative effort to characterize and analyze naturalistic visual environments across different geographies. The project brings together partners from around the globe to build a rich repository of spectral and spatial data."
   }
 ]
