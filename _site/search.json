@@ -207,7 +207,7 @@
     "href": "index.html#resources",
     "title": "SCENES Dataset",
     "section": "Resources",
-    "text": "Resources\n\n📊 Statistics: Explore dataset distributions\n\n📁 Download: Data access (coming soon)\n\n📖 Documentation: User guide (coming soon)"
+    "text": "Resources\n\n\nSCENES overview\nExplore comprehensive dataset distributions and acquisition metrics\n\n\n\nDownload\nAccess spectral and spatial data\n\n\n\nGallery\nView representative images from the dataset (coming soon)\n\n\nDocumentation\nComplete user guide and methodology (coming soon)"
   },
   {
     "objectID": "scripts/plots.html",
@@ -278,5 +278,12 @@
     "title": "SCENES Dataset",
     "section": "title: “SCENES Dataset”",
     "text": "title: “SCENES Dataset”\n\nThe SCENES Dataset is an international collaborative effort to characterize and analyze naturalistic visual environments across different geographies. The project brings together partners from around the globe to build a rich repository of spectral and spatial data."
+  },
+  {
+    "objectID": "index.html#team",
+    "href": "index.html#team",
+    "title": "SCENES Dataset",
+    "section": "Team",
+    "text": "Team"
   }
 ]
